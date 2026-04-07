@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 
@@ -11,10 +11,8 @@ const RegisterPage = () => {
     email: "",
     password: "",
     role: "ROLE_USER",
-    hotelId: "",
+    hotelId: null,
   });
-  const [hotels, setHotels] = useState([]);
-  const [loadingHotels, setLoadingHotels] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -22,22 +20,6 @@ const RegisterPage = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  useEffect(() => {
-    const fetchHotels = async () => {
-      setLoadingHotels(true);
-      try {
-        const data = await api.getHotels();
-        setHotels(data);
-      } catch {
-        setHotels([]);
-      } finally {
-        setLoadingHotels(false);
-      }
-    };
-
-    fetchHotels();
-  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -56,18 +38,16 @@ const RegisterPage = () => {
       return;
     }
 
-    if (formData.role === "ROLE_ADMIN" && !formData.hotelId) {
-      setError("Please select a hotel to manage for admin signup.");
-      return;
-    }
-
     setIsLoading(true);
     try {
       await api.register({
         ...formData,
         email: normalizedEmail,
         hotelId:
-          formData.role === "ROLE_ADMIN" ? Number(formData.hotelId) : null,
+          formData.role === "ROLE_ADMIN" &&
+          Number.isFinite(Number(formData.hotelId))
+            ? Number(formData.hotelId)
+            : null,
       });
       navigate("/login", {
         state: { message: "Registration successful. Please log in." },
@@ -110,7 +90,7 @@ const RegisterPage = () => {
                 setFormData((prev) => ({
                   ...prev,
                   role: "ROLE_USER",
-                  hotelId: "",
+                  hotelId: null,
                 }))
               }
               className={`py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -124,7 +104,11 @@ const RegisterPage = () => {
             <button
               type="button"
               onClick={() =>
-                setFormData((prev) => ({ ...prev, role: "ROLE_ADMIN" }))
+                setFormData((prev) => ({
+                  ...prev,
+                  role: "ROLE_ADMIN",
+                  hotelId: null,
+                }))
               }
               className={`py-2 rounded-lg text-sm font-medium transition-colors ${
                 formData.role === "ROLE_ADMIN"
@@ -186,33 +170,9 @@ const RegisterPage = () => {
           </div>
 
           {formData.role === "ROLE_ADMIN" && (
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider ml-1">
-                Hotel To Manage
-              </label>
-              <select
-                name="hotelId"
-                value={formData.hotelId}
-                onChange={handleChange}
-                className="w-full px-5 py-3.5 bg-black/30 border border-white/5 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-rose-300/40 focus:border-rose-300/40 transition-all shadow-inner"
-                required
-              >
-                <option value="" className="text-slate-900">
-                  {loadingHotels ? "Loading hotels..." : "Select a hotel"}
-                </option>
-                {hotels.map((hotel) => {
-                  const hotelId = hotel.hotelId || hotel.hotel_id;
-                  return (
-                    <option
-                      key={hotelId}
-                      value={hotelId}
-                      className="text-slate-900"
-                    >
-                      {hotel.name}
-                    </option>
-                  );
-                })}
-              </select>
+            <div className="p-3 rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-emerald-200 text-sm">
+              On first login, you can publish your hotel by entering full hotel
+              and address details.
             </div>
           )}
 

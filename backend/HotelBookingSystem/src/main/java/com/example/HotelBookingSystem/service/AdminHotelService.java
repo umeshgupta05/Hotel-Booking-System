@@ -1,8 +1,10 @@
 package com.example.HotelBookingSystem.service;
 
 import com.example.HotelBookingSystem.dto.AdminAmenityUpdateRequest;
+import com.example.HotelBookingSystem.dto.AdminHotelPublishRequest;
 import com.example.HotelBookingSystem.dto.AdminHotelUpdateRequest;
 import com.example.HotelBookingSystem.dto.AdminRoomRequest;
+import com.example.HotelBookingSystem.entity.Address;
 import com.example.HotelBookingSystem.entity.Amenity;
 import com.example.HotelBookingSystem.entity.Hotel;
 import com.example.HotelBookingSystem.entity.Room;
@@ -47,6 +49,47 @@ public class AdminHotelService {
     }
 
     @Transactional
+    public Hotel publishMyHotel(Long userId, AdminHotelPublishRequest request) {
+        User user = getAdminUser(userId);
+        if (user.getManagedHotel() != null) {
+            throw new RuntimeException("Hotel already published for this admin account.");
+        }
+
+        Address address = new Address();
+        address.setStreet(request.getStreet().trim());
+        address.setCity(request.getCity().trim());
+        address.setState(request.getState().trim());
+        address.setCountry(request.getCountry().trim());
+        address.setZipCode(request.getZipCode().trim());
+
+        Hotel hotel = new Hotel();
+        hotel.setName(request.getName().trim());
+        hotel.setDescription(request.getDescription().trim());
+        hotel.setBasePrice(request.getBasePrice());
+        hotel.setImageUrl(StringUtils.hasText(request.getImageUrl()) ? request.getImageUrl().trim() : null);
+        hotel.setContactEmail(request.getContactEmail().trim().toLowerCase());
+        hotel.setContactPhone(request.getContactPhone().trim());
+        hotel.setAddress(address);
+        hotel.setRating(0.0);
+
+        Set<Amenity> amenities = new HashSet<>();
+        if (request.getAmenityIds() != null) {
+            for (Long amenityId : request.getAmenityIds()) {
+                Long safeAmenityId = Objects.requireNonNull(amenityId, "amenityId is required");
+                Amenity amenity = amenityRepository.findById(safeAmenityId)
+                        .orElseThrow(() -> new RuntimeException("Amenity not found: " + safeAmenityId));
+                amenities.add(amenity);
+            }
+        }
+        hotel.setAmenities(amenities);
+
+        Hotel savedHotel = hotelRepository.save(hotel);
+        user.setManagedHotel(savedHotel);
+        userRepository.save(user);
+        return savedHotel;
+    }
+
+    @Transactional
     public Hotel updateMyHotel(Long userId, AdminHotelUpdateRequest request) {
         Hotel hotel = getManagedHotel(userId);
 
@@ -69,7 +112,8 @@ public class AdminHotelService {
             hotel.setContactPhone(request.getContactPhone().trim());
         }
 
-        return hotelRepository.save(hotel);
+        Hotel safeHotel = Objects.requireNonNull(hotel, "hotel is required");
+        return hotelRepository.save(safeHotel);
     }
 
     public List<Room> getMyHotelRooms(Long userId) {
@@ -80,7 +124,8 @@ public class AdminHotelService {
     @Transactional
     public Room createRoom(Long userId, AdminRoomRequest request) {
         Hotel hotel = getManagedHotel(userId);
-        RoomCategory category = roomCategoryRepository.findById(request.getCategoryId())
+        Long categoryId = Objects.requireNonNull(request.getCategoryId(), "categoryId is required");
+        RoomCategory category = roomCategoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Room category not found."));
 
         Room room = new Room();
@@ -95,14 +140,16 @@ public class AdminHotelService {
     @Transactional
     public Room updateRoom(Long userId, Long roomId, AdminRoomRequest request) {
         Hotel hotel = getManagedHotel(userId);
-        Room room = roomRepository.findById(roomId)
+        Long safeRoomId = Objects.requireNonNull(roomId, "roomId is required");
+        Room room = roomRepository.findById(safeRoomId)
                 .orElseThrow(() -> new RuntimeException("Room not found."));
 
         if (!room.getHotel().getHotelId().equals(hotel.getHotelId())) {
             throw new RuntimeException("You are not authorized to modify this room.");
         }
 
-        RoomCategory category = roomCategoryRepository.findById(request.getCategoryId())
+        Long categoryId = Objects.requireNonNull(request.getCategoryId(), "categoryId is required");
+        RoomCategory category = roomCategoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Room category not found."));
 
         room.setRoomNumber(request.getRoomNumber().trim());
@@ -115,7 +162,8 @@ public class AdminHotelService {
     @Transactional
     public void deleteRoom(Long userId, Long roomId) {
         Hotel hotel = getManagedHotel(userId);
-        Room room = roomRepository.findById(roomId)
+        Long safeRoomId = Objects.requireNonNull(roomId, "roomId is required");
+        Room room = roomRepository.findById(safeRoomId)
                 .orElseThrow(() -> new RuntimeException("Room not found."));
 
         if (!room.getHotel().getHotelId().equals(hotel.getHotelId())) {
@@ -140,8 +188,9 @@ public class AdminHotelService {
 
         if (request.getAmenityIds() != null) {
             for (Long amenityId : request.getAmenityIds()) {
-                Amenity amenity = amenityRepository.findById(amenityId)
-                        .orElseThrow(() -> new RuntimeException("Amenity not found: " + amenityId));
+                Long safeAmenityId = Objects.requireNonNull(amenityId, "amenityId is required");
+                Amenity amenity = amenityRepository.findById(safeAmenityId)
+                        .orElseThrow(() -> new RuntimeException("Amenity not found: " + safeAmenityId));
                 amenities.add(amenity);
             }
         }
@@ -151,6 +200,17 @@ public class AdminHotelService {
     }
 
     private Hotel getManagedHotel(Long userId) {
+        User user = getAdminUser(userId);
+
+        Hotel managedHotel = user.getManagedHotel();
+        if (managedHotel == null) {
+            throw new RuntimeException("No hotel is assigned to this admin account.");
+        }
+
+        return managedHotel;
+    }
+
+    private User getAdminUser(Long userId) {
         Long safeUserId = Objects.requireNonNull(userId, "userId is required");
         User user = userRepository.findById(safeUserId)
                 .orElseThrow(() -> new RuntimeException("Admin user not found."));
@@ -159,11 +219,6 @@ public class AdminHotelService {
             throw new RuntimeException("Only admin users can manage hotels.");
         }
 
-        Hotel managedHotel = user.getManagedHotel();
-        if (managedHotel == null) {
-            throw new RuntimeException("No hotel is assigned to this admin account.");
-        }
-
-        return managedHotel;
+        return user;
     }
 }

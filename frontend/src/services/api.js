@@ -88,6 +88,17 @@ const normalizeRoomCategory = (category) => ({
   capacity: category?.capacity,
 });
 
+const normalizeReview = (review) => ({
+  review_id: review?.review_id ?? review?.reviewId,
+  reviewId: review?.reviewId ?? review?.review_id,
+  hotel_id: review?.hotel_id ?? review?.hotelId,
+  hotelId: review?.hotelId ?? review?.hotel_id,
+  user_id: review?.user_id ?? review?.userId,
+  userId: review?.userId ?? review?.user_id,
+  rating: review?.rating,
+  comment: review?.comment,
+});
+
 const getAuthHeaders = () => {
   const token = localStorage.getItem("hotel_token");
   return {
@@ -195,6 +206,16 @@ export const api = {
   getAdminHotel: async () => {
     const response = await fetch(`${API_BASE_URL}/admin/hotel`, {
       headers: getAuthHeaders(),
+    });
+    const data = await handleResponse(response);
+    return normalizeHotel(data);
+  },
+
+  publishAdminHotel: async (publishData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/hotel/publish`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(publishData),
     });
     const data = await handleResponse(response);
     return normalizeHotel(data);
@@ -419,5 +440,29 @@ export const api = {
 
     const data = await handleResponse(response);
     return normalizeBooking(data);
+  },
+
+  // Reviews
+  getHotelReviews: async (hotelId) => {
+    const response = await fetch(`${API_BASE_URL}/reviews/hotel/${hotelId}`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await handleResponse(response);
+    return Array.isArray(data) ? data.map(normalizeReview) : [];
+  },
+
+  submitHotelReview: async (reviewData) => {
+    const response = await fetch(`${API_BASE_URL}/reviews`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        hotelId: reviewData.hotelId,
+        rating: reviewData.rating,
+        comment: reviewData.comment,
+      }),
+    });
+
+    const data = await handleResponse(response);
+    return normalizeReview(data);
   },
 };

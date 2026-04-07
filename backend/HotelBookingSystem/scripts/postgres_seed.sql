@@ -189,7 +189,7 @@ WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 7);
 
 INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
 SELECT 8, 'Cyber Pearl Residency', 'Business-friendly stay near IT corridor with smart workspace suites.', 8, 4.4, 4200,
-       'https://images.unsplash.com/photo-1501117716987-c8e1ecb210f8?auto=format&fit=crop&w=1600&q=80',
+    'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1600&q=80',
        'stay@cyberpearl.in', '+91-40-5200-8800', NOW()
 WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 8);
 
@@ -213,7 +213,7 @@ WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 11);
 
 INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
 SELECT 12, 'Ganges Serenity Inn', 'Spiritual riverside experience with sunrise yoga and vegetarian cuisine.', 12, 4.3, 3400,
-       'https://images.unsplash.com/photo-1542314831-c6a4d14d8387?auto=format&fit=crop&w=1600&q=80',
+    'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1600&q=80',
        'namaste@gangesserenity.in', '+91-542-3200-4400', NOW()
 WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 12);
 
@@ -350,6 +350,15 @@ INSERT INTO hotel_amenities (hotel_id, amenity_id)
 SELECT 14, 2 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 14 AND amenity_id = 2);
 INSERT INTO hotel_amenities (hotel_id, amenity_id)
 SELECT 14, 4 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 14 AND amenity_id = 4);
+
+-- Repair broken image URLs for existing seeded rows.
+UPDATE hotels
+SET image_url = 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1600&q=80'
+WHERE hotel_id = 8;
+
+UPDATE hotels
+SET image_url = 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1600&q=80'
+WHERE hotel_id = 12;
 
 -- Keep identity sequences ahead of inserted explicit IDs
 SELECT setval(pg_get_serial_sequence('addresses', 'address_id'), COALESCE((SELECT MAX(address_id) FROM addresses), 1), true);

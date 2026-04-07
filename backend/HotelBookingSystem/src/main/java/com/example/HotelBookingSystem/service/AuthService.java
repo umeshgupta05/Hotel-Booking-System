@@ -89,16 +89,20 @@ public class AuthService {
 
         String requestedRole = normalizeRole(signUpRequest.getRole());
         if ("ROLE_ADMIN".equals(requestedRole)) {
-            Long hotelId = Objects.requireNonNull(signUpRequest.getHotelId(), "hotelId is required for admin signup");
-            Hotel managedHotel = hotelRepository.findById(hotelId)
-                    .orElseThrow(() -> new RuntimeException("Selected hotel not found."));
-
-            if (userRepository.existsByManagedHotelHotelIdAndRole(hotelId, "ROLE_ADMIN")) {
-                throw new RuntimeException("Selected hotel already has an admin account.");
-            }
-
             user.setRole("ROLE_ADMIN");
-            user.setManagedHotel(managedHotel);
+            if (signUpRequest.getHotelId() != null) {
+                Long hotelId = Objects.requireNonNull(signUpRequest.getHotelId(), "hotelId is required");
+                Hotel managedHotel = hotelRepository.findById(hotelId)
+                        .orElseThrow(() -> new RuntimeException("Selected hotel not found."));
+
+                if (userRepository.existsByManagedHotelHotelIdAndRole(hotelId, "ROLE_ADMIN")) {
+                    throw new RuntimeException("Selected hotel already has an admin account.");
+                }
+
+                user.setManagedHotel(managedHotel);
+            } else {
+                user.setManagedHotel(null);
+            }
         } else {
             user.setRole("ROLE_USER");
             user.setManagedHotel(null);

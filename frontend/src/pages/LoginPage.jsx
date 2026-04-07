@@ -39,6 +39,9 @@ const LoginPage = () => {
 
       const isAdminAccount =
         (response.user?.role || "").toUpperCase() === "ROLE_ADMIN";
+      const hasPublishedHotel = Boolean(
+        response.user?.hotelId || response.user?.hotel_id,
+      );
       if (loginType === "ADMIN" && !isAdminAccount) {
         setError("This account is not registered as admin.");
         return;
@@ -53,9 +56,18 @@ const LoginPage = () => {
       if (from) {
         navigate(from, { replace: true });
       } else {
-        navigate(isAdminAccount ? "/admin/dashboard" : "/dashboard", {
-          replace: true,
-        });
+        if (isAdminAccount) {
+          navigate(
+            hasPublishedHotel ? "/admin/dashboard" : "/admin/publish-hotel",
+            {
+              replace: true,
+            },
+          );
+        } else {
+          navigate("/dashboard", {
+            replace: true,
+          });
+        }
       }
     } catch (err) {
       setError(err.message || "Invalid email or password.");

@@ -19,6 +19,7 @@ import HotelDetailsPage from "./pages/HotelDetailsPage";
 import BookingPage from "./pages/BookingPage";
 import DashboardPage from "./pages/DashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import PublishHotelPage from "./pages/PublishHotelPage";
 
 function App() {
   return (
@@ -54,9 +55,17 @@ function App() {
                 }
               />
               <Route
-                path="/admin/dashboard"
+                path="/admin/publish-hotel"
                 element={
                   <AdminRoute>
+                    <PublishHotelPage />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <AdminRoute requirePublished>
                     <AdminDashboardPage />
                   </AdminRoute>
                 }

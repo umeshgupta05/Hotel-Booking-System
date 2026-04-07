@@ -1,6 +1,7 @@
 package com.example.HotelBookingSystem.controller;
 
 import com.example.HotelBookingSystem.dto.AdminAmenityUpdateRequest;
+import com.example.HotelBookingSystem.dto.AdminHotelPublishRequest;
 import com.example.HotelBookingSystem.dto.AdminHotelUpdateRequest;
 import com.example.HotelBookingSystem.dto.AdminRoomRequest;
 import com.example.HotelBookingSystem.entity.Amenity;
@@ -34,6 +35,11 @@ public class AdminHotelController {
     @GetMapping("/hotel")
     public ResponseEntity<Hotel> getMyHotel() {
         return ResponseEntity.ok(adminHotelService.getMyHotel(getCurrentUserId()));
+    }
+
+    @PostMapping("/hotel/publish")
+    public ResponseEntity<Hotel> publishMyHotel(@Valid @RequestBody AdminHotelPublishRequest request) {
+        return ResponseEntity.ok(adminHotelService.publishMyHotel(getCurrentUserId(), request));
     }
 
     @PutMapping("/hotel")

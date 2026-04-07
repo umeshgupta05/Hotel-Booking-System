@@ -2,9 +2,10 @@ import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const AdminRoute = ({ children }) => {
+const AdminRoute = ({ children, requirePublished = false }) => {
   const { isAuthenticated, loading, user } = useAuth();
   const location = useLocation();
+  const hasPublishedHotel = Boolean(user?.hotelId || user?.hotel_id);
 
   if (loading) {
     return (
@@ -20,6 +21,10 @@ const AdminRoute = ({ children }) => {
 
   if ((user?.role || "").toUpperCase() !== "ROLE_ADMIN") {
     return <Navigate to="/dashboard" replace />;
+  }
+
+  if (requirePublished && !hasPublishedHotel) {
+    return <Navigate to="/admin/publish-hotel" replace />;
   }
 
   return children;
