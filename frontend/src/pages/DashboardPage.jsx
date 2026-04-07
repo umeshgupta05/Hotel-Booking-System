@@ -7,6 +7,10 @@ const DashboardPage = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [bookings, setBookings] = useState([]);
+  const [page, setPage] = useState(0);
+  const [pageSize] = useState(8);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(location.state?.message || "");
 
@@ -21,8 +25,15 @@ const DashboardPage = () => {
     const fetchBookings = async () => {
       if (!user) return;
       try {
-        const data = await api.getUserBookings();
-        setBookings(data);
+        const response = await api.getUserBookings({
+          page,
+          size: pageSize,
+          sortBy: "bookingId",
+          sortDir: "desc",
+        });
+        setBookings(response.content || []);
+        setTotalPages(response.totalPages || 0);
+        setTotalElements(response.totalElements || 0);
       } catch (err) {
         console.error("Failed to fetch bookings", err);
       } finally {
@@ -30,15 +41,28 @@ const DashboardPage = () => {
       }
     };
     fetchBookings();
-  }, [user]);
+  }, [user, page, pageSize]);
+
+  useEffect(() => {
+    if (totalPages > 0 && page >= totalPages) {
+      setPage(totalPages - 1);
+    }
+  }, [totalPages, page]);
 
   const handleCancel = async (bookingId) => {
     if (window.confirm("Are you sure you want to cancel this booking?")) {
       try {
-        const updated = await api.cancelBooking(bookingId);
-        setBookings((prev) =>
-          prev.map((b) => (b.booking_id === bookingId ? updated : b)),
-        );
+        await api.cancelBooking(bookingId);
+
+        const response = await api.getUserBookings({
+          page,
+          size: pageSize,
+          sortBy: "bookingId",
+          sortDir: "desc",
+        });
+        setBookings(response.content || []);
+        setTotalPages(response.totalPages || 0);
+        setTotalElements(response.totalElements || 0);
         setMessage("Booking cancelled successfully.");
       } catch {
         alert("Failed to cancel booking");
@@ -48,19 +72,24 @@ const DashboardPage = () => {
 
   const activeBookings = useMemo(
     () =>
-      bookings.filter(
-        (booking) => (booking.status || "").toUpperCase() !== "CANCELLED",
-      ),
+      bookings.filter((booking) => {
+        const status = (booking.status || "").toUpperCase();
+        return status !== "CANCELLED" && status !== "EXPIRED";
+      }),
     [bookings],
   );
 
   const cancelledBookings = useMemo(
     () =>
-      bookings.filter(
-        (booking) => (booking.status || "").toUpperCase() === "CANCELLED",
-      ),
+      bookings.filter((booking) => {
+        const status = (booking.status || "").toUpperCase();
+        return status === "CANCELLED" || status === "EXPIRED";
+      }),
     [bookings],
   );
+
+  const canGoPrev = page > 0;
+  const canGoNext = page + 1 < totalPages;
 
   const renderBookingCard = (booking) => (
     <div
@@ -75,7 +104,9 @@ const DashboardPage = () => {
                 ? "bg-green-100 text-green-700"
                 : booking.status === "CANCELLED"
                   ? "bg-red-100 text-red-700"
-                  : "bg-yellow-100 text-yellow-700"
+                  : booking.status === "EXPIRED"
+                    ? "bg-slate-200 text-slate-700"
+                    : "bg-yellow-100 text-yellow-700"
             }`}
           >
             {booking.status}
@@ -100,7 +131,7 @@ const DashboardPage = () => {
         <div className="text-xl font-bold text-brand-navy">
           ₹{Number(booking.total_amount || 0).toLocaleString()}
         </div>
-        {booking.status === "CONFIRMED" && (
+        {(booking.status || "").toUpperCase() === "CONFIRMED" && (
           <button
             onClick={() => handleCancel(booking.booking_id)}
             className="text-red-500 hover:text-red-700 text-sm font-medium"
@@ -146,7 +177,7 @@ const DashboardPage = () => {
               <div className="pt-6 border-t border-slate-100 flex justify-between text-sm">
                 <span className="text-slate-600">Total Bookings</span>
                 <span className="font-bold text-brand-navy">
-                  {bookings.length}
+                  {totalElements}
                 </span>
               </div>
             </div>
@@ -216,7 +247,7 @@ const DashboardPage = () => {
                   <div>
                     <div className="mb-4 flex items-center justify-between">
                       <h3 className="text-lg font-semibold text-slate-900">
-                        Cancelled Bookings
+                        Cancelled / Expired Bookings
                       </h3>
                       <span className="px-3 py-1 text-xs font-semibold rounded-full bg-rose-100 text-rose-700">
                         {cancelledBookings.length}
@@ -224,7 +255,7 @@ const DashboardPage = () => {
                     </div>
                     {cancelledBookings.length === 0 ? (
                       <div className="p-5 rounded-xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500">
-                        No cancelled bookings in your history.
+                        No cancelled or expired bookings in this page.
                       </div>
                     ) : (
                       <div className="space-y-4">
@@ -234,6 +265,28 @@ const DashboardPage = () => {
                       </div>
                     )}
                   </div>
+
+                  {totalPages > 1 && (
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <button
+                        onClick={() => canGoPrev && setPage((prev) => prev - 1)}
+                        disabled={!canGoPrev}
+                        className="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Previous
+                      </button>
+                      <span className="text-sm text-slate-600">
+                        Page {page + 1} of {totalPages}
+                      </span>
+                      <button
+                        onClick={() => canGoNext && setPage((prev) => prev + 1)}
+                        disabled={!canGoNext}
+                        className="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

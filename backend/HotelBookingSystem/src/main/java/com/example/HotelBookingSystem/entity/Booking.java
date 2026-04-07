@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -50,4 +51,8 @@ public class Booking {
     
     // e.g. "CONFIRMED", "CANCELLED", "PENDING"
     private String status;
+
+    // Payment lock expiry for pending bookings in concurrent environments.
+    @com.fasterxml.jackson.annotation.JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime lockExpiresAt;
 }

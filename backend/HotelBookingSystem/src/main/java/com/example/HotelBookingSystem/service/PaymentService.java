@@ -18,11 +18,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class PaymentService {
+    private static final String STATUS_PENDING_PAYMENT = "PENDING_PAYMENT";
+    private static final String STATUS_CONFIRMED = "CONFIRMED";
+    private static final String STATUS_CANCELLED = "CANCELLED";
+    private static final String STATUS_EXPIRED = "EXPIRED";
+
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -39,20 +44,33 @@ public class PaymentService {
     @Transactional
     public Payment processPayment(PaymentRequest request) {
         Long bookingId = Objects.requireNonNull(request.getBookingId(), "bookingId is required");
-        Optional<Booking> bookingOpt = bookingRepository.findById(bookingId);
-        if (bookingOpt.isEmpty()) {
-            throw new RuntimeException("Booking not found");
+        Booking booking = bookingRepository.findByIdForUpdate(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        if (STATUS_CANCELLED.equals(booking.getStatus())) {
+            throw new RuntimeException("Booking is cancelled.");
         }
-        
-        Payment payment = new Payment();
-        payment.setBooking(bookingOpt.get());
-        payment.setAmount(request.getAmount());
-        payment.setMethod(request.getMethod());
-        payment.setStatus("COMPLETED");
-        
-        Booking booking = bookingOpt.get();
-        booking.setStatus("CONFIRMED");
+
+        if (STATUS_EXPIRED.equals(booking.getStatus())) {
+            throw new RuntimeException("Booking lock expired. Please create a new booking.");
+        }
+
+        if (STATUS_CONFIRMED.equals(booking.getStatus())) {
+            return paymentRepository.findByBookingBookingId(bookingId)
+                    .orElseThrow(() -> new RuntimeException("Booking already confirmed."));
+        }
+
+        validateAndExpireIfWindowClosed(booking);
+
+        booking.setStatus(STATUS_CONFIRMED);
+        booking.setLockExpiresAt(null);
         bookingRepository.save(booking);
+
+        Payment payment = paymentRepository.findByBookingBookingId(bookingId).orElseGet(Payment::new);
+        payment.setBooking(booking);
+        payment.setAmount(request.getAmount() != null ? request.getAmount() : booking.getTotalAmount());
+        payment.setMethod(request.getMethod() != null ? request.getMethod() : "PAY_AT_HOTEL");
+        payment.setStatus("COMPLETED");
 
         return paymentRepository.save(payment);
     }
@@ -60,17 +78,42 @@ public class PaymentService {
     @Transactional
     public RazorpayOrderResponse createRazorpayOrder(RazorpayOrderRequest request) {
         try {
+            Long bookingId = Objects.requireNonNull(request.getBookingId(), "bookingId is required");
+            Booking booking = bookingRepository.findByIdForUpdate(bookingId)
+                    .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+            if (STATUS_CANCELLED.equals(booking.getStatus())) {
+                throw new RuntimeException("Booking is cancelled.");
+            }
+
+            if (STATUS_EXPIRED.equals(booking.getStatus())) {
+                throw new RuntimeException("Booking lock expired. Please create a new booking.");
+            }
+
+            if (STATUS_CONFIRMED.equals(booking.getStatus())) {
+                throw new RuntimeException("Booking already confirmed.");
+            }
+
+            validateAndExpireIfWindowClosed(booking);
+
+            double amountRupees = booking.getTotalAmount() != null
+                    ? booking.getTotalAmount()
+                    : (request.getAmount() != null ? request.getAmount() : 0L);
+            long amountPaise = Math.round(amountRupees * 100.0);
+            if (amountPaise <= 0) {
+                throw new RuntimeException("Invalid payment amount.");
+            }
+
             JSONObject orderRequest = new JSONObject();
-            // amount in paise
-            orderRequest.put("amount", request.getAmount() * 100);
-            orderRequest.put("currency", "INR"); 
-            orderRequest.put("receipt", "txn_" + System.currentTimeMillis());
+            orderRequest.put("amount", amountPaise);
+            orderRequest.put("currency", request.getCurrency() != null ? request.getCurrency() : "INR");
+            orderRequest.put("receipt", "booking_" + bookingId + "_" + System.currentTimeMillis());
 
             Order order = razorpayClient.orders.create(orderRequest);
             return new RazorpayOrderResponse(
                     order.get("id"),
-                    request.getAmount() * 100, // Returning paise
-                    "INR"
+                    amountPaise,
+                    request.getCurrency() != null ? request.getCurrency() : "INR"
             );
         } catch (RazorpayException e) {
             throw new RuntimeException("Error while creating Razorpay Order: " + e.getMessage());
@@ -88,27 +131,48 @@ public class PaymentService {
             if (!generatedSignature.equals(request.getRazorpaySignature())) {
                 throw new RuntimeException("Razorpay signature verification failed");
             }
-            
-            // Signature applies. Update the DB booking to confirmed.
+
             Long bookingId = Objects.requireNonNull(request.getBookingId(), "bookingId is required");
-            Optional<Booking> bookingOpt = bookingRepository.findById(bookingId);
-            if (bookingOpt.isEmpty()) {
-                throw new RuntimeException("Booking not found to confirm payment");
+            Booking booking = bookingRepository.findByIdForUpdate(bookingId)
+                    .orElseThrow(() -> new RuntimeException("Booking not found to confirm payment"));
+
+            if (STATUS_CANCELLED.equals(booking.getStatus())) {
+                throw new RuntimeException("Booking is cancelled.");
             }
 
-            Booking booking = bookingOpt.get();
-            booking.setStatus("CONFIRMED");
+            if (STATUS_EXPIRED.equals(booking.getStatus())) {
+                throw new RuntimeException("Booking lock expired. Please create a new booking.");
+            }
+
+            if (!STATUS_CONFIRMED.equals(booking.getStatus())) {
+                validateAndExpireIfWindowClosed(booking);
+                booking.setStatus(STATUS_CONFIRMED);
+                booking.setLockExpiresAt(null);
+            }
             bookingRepository.save(booking);
 
-            Payment payment = new Payment();
+            Payment payment = paymentRepository.findByBookingBookingId(bookingId).orElseGet(Payment::new);
             payment.setBooking(booking);
             payment.setAmount(booking.getTotalAmount());
             payment.setMethod("RAZORPAY");
             payment.setStatus("COMPLETED");
-            
+
             return paymentRepository.save(payment);
         } catch (Exception e) {
             throw new RuntimeException("Error verifying signature: " + e.getMessage(), e);
+        }
+    }
+
+    private void validateAndExpireIfWindowClosed(Booking booking) {
+        if (!STATUS_PENDING_PAYMENT.equals(booking.getStatus())) {
+            throw new RuntimeException("Booking is not awaiting payment.");
+        }
+
+        if (booking.getLockExpiresAt() != null && booking.getLockExpiresAt().isBefore(LocalDateTime.now())) {
+            booking.setStatus(STATUS_EXPIRED);
+            booking.setLockExpiresAt(null);
+            bookingRepository.save(booking);
+            throw new RuntimeException("Payment window expired. Please create a new booking.");
         }
     }
 }

@@ -6,6 +6,7 @@ import com.example.HotelBookingSystem.security.UserDetailsImpl;
 import com.example.HotelBookingSystem.service.BookingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,15 @@ public class BookingController {
     @GetMapping("/my-history")
     public ResponseEntity<List<Booking>> getMyHistory() {
         return ResponseEntity.ok(bookingService.getUserHistory(getCurrentUserId()));
+    }
+
+    @GetMapping("/my-history/paged")
+    public ResponseEntity<Page<Booking>> getMyHistoryPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "bookingId") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        return ResponseEntity.ok(bookingService.getUserHistoryPaged(getCurrentUserId(), page, size, sortBy, sortDir));
     }
 
     @GetMapping("/{id}")

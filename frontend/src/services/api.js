@@ -71,6 +71,8 @@ const normalizeBooking = (booking) => ({
   total_amount: booking?.total_amount ?? booking?.totalAmount,
   totalAmount: booking?.totalAmount ?? booking?.total_amount,
   status: booking?.status,
+  lock_expires_at: booking?.lock_expires_at ?? booking?.lockExpiresAt,
+  lockExpiresAt: booking?.lockExpiresAt ?? booking?.lock_expires_at,
 });
 
 const normalizeAmenity = (amenity) => ({
@@ -421,7 +423,49 @@ export const api = {
     return await handleResponse(response);
   },
 
-  getUserBookings: async () => {
+  getUserBookings: async (options = {}) => {
+    const page = Number.isInteger(options.page) ? options.page : 0;
+    const size = Number.isInteger(options.size) ? options.size : 10;
+    const sortBy = options.sortBy || "bookingId";
+    const sortDir = options.sortDir || "desc";
+
+    const params = new URLSearchParams({
+      page: String(Math.max(0, page)),
+      size: String(Math.min(50, Math.max(1, size))),
+      sortBy,
+      sortDir,
+    });
+
+    const response = await fetch(
+      `${API_BASE_URL}/bookings/my-history/paged?${params.toString()}`,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
+    const data = await handleResponse(response);
+
+    if (Array.isArray(data)) {
+      const content = data.map(normalizeBooking);
+      return {
+        content,
+        totalElements: content.length,
+        totalPages: 1,
+        number: 0,
+        size: content.length,
+        first: true,
+        last: true,
+      };
+    }
+
+    return {
+      ...data,
+      content: Array.isArray(data?.content)
+        ? data.content.map(normalizeBooking)
+        : [],
+    };
+  },
+
+  getUserBookingsLegacy: async () => {
     const response = await fetch(`${API_BASE_URL}/bookings/my-history`, {
       headers: getAuthHeaders(),
     });
