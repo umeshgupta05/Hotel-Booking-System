@@ -32,7 +32,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 px-3 pt-3 md:px-6 md:pt-4">
+    <nav className="relative z-50 px-3 pt-3 md:px-6 md:pt-4">
       <div className="mx-auto max-w-7xl rounded-2xl border border-white/35 bg-[linear-gradient(120deg,rgba(9,25,40,0.94),rgba(8,34,58,0.9))] shadow-[0_18px_44px_rgba(8,20,35,0.28)] backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
