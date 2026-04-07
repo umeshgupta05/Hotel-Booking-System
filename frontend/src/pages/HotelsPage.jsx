@@ -82,15 +82,36 @@ const HotelsPage = () => {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen py-8">
+    <div className="min-h-screen py-8 md:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 surface-panel p-6 md:p-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <span className="eyebrow-chip">Discover stays</span>
+              <h1 className="mt-3 text-3xl md:text-4xl font-bold text-slate-900">
+                Find your next signature property
+              </h1>
+              <p className="mt-2 text-slate-600 max-w-2xl">
+                Search by city, hotel details, amenities, or contact info and
+                filter results in real time.
+              </p>
+            </div>
+            <div className="surface-glass rounded-xl px-4 py-3">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                Live result count
+              </p>
+              <p className="mt-1 text-2xl font-bold text-slate-900">
+                {displayedHotels.length}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-col md:flex-row gap-8">
           {/* Filters Sidebar */}
           <div className="w-full md:w-64 shrink-0">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 sticky top-24">
-              <h2 className="font-bold text-lg text-brand-navy mb-4">
-                Filters
-              </h2>
+            <div className="surface-panel p-6 sticky top-28">
+              <h2 className="font-bold text-lg text-slate-900 mb-4">Filters</h2>
 
               <div className="mb-6">
                 <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -98,7 +119,7 @@ const HotelsPage = () => {
                 </label>
                 <input
                   type="range"
-                  className="w-full accent-brand-accent"
+                  className="w-full accent-blue-500"
                   min="500"
                   max="20000"
                   step="500"
@@ -147,10 +168,7 @@ const HotelsPage = () => {
                 </div>
               </div>
 
-              <button
-                onClick={handleReset}
-                className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors text-sm"
-              >
+              <button onClick={handleReset} className="btn-outline w-full py-2">
                 Reset Filters
               </button>
             </div>
@@ -167,24 +185,21 @@ const HotelsPage = () => {
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Search by hotel details"
-                className="flex-1 px-4 py-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent"
+                className="input-field flex-1"
               />
-              <button
-                type="submit"
-                className="px-5 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-accent transition-colors"
-              >
+              <button type="submit" className="btn-primary px-5 py-2">
                 Search
               </button>
             </form>
 
             <div className="mb-6 flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-brand-navy">
+              <h2 className="text-2xl font-bold text-slate-900">
                 Available Properties ({displayedHotels.length})
-              </h1>
+              </h2>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="border border-slate-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent"
+                className="input-field max-w-44 px-3 py-2 text-sm"
               >
                 <option>Recommended</option>
                 <option>Price: Low to High</option>
@@ -195,10 +210,10 @@ const HotelsPage = () => {
 
             {loading ? (
               <div className="flex justify-center py-20">
-                <div className="w-10 h-10 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 stagger-children">
                 {displayedHotels.map((hotel) => (
                   <HotelCard
                     key={hotel.hotel_id ?? hotel.hotelId ?? hotel.id}
@@ -206,7 +221,7 @@ const HotelsPage = () => {
                   />
                 ))}
                 {displayedHotels.length === 0 && (
-                  <div className="col-span-1 lg:col-span-2 py-12 text-center text-slate-500 bg-white rounded-xl shadow-sm border border-slate-100">
+                  <div className="col-span-1 lg:col-span-2 py-12 text-center text-slate-500 surface-panel">
                     No properties match your exact filters. Try adjusting the
                     price or rating.
                   </div>

@@ -94,7 +94,7 @@ const DashboardPage = () => {
   const renderBookingCard = (booking) => (
     <div
       key={booking.booking_id}
-      className="border border-slate-100 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:border-slate-300 transition-colors"
+      className="surface-glass rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover-lift"
     >
       <div className="mb-4 md:mb-0 space-y-2">
         <div className="flex items-center space-x-3">
@@ -128,7 +128,7 @@ const DashboardPage = () => {
         </div>
       </div>
       <div className="flex flex-row md:flex-col items-center md:items-end justify-between w-full md:w-auto mt-4 md:mt-0 gap-4">
-        <div className="text-xl font-bold text-brand-navy">
+        <div className="text-xl font-bold text-slate-900">
           ₹{Number(booking.total_amount || 0).toLocaleString()}
         </div>
         {(booking.status || "").toUpperCase() === "CONFIRMED" && (
@@ -146,10 +146,10 @@ const DashboardPage = () => {
   if (!user) return null;
 
   return (
-    <div className="bg-slate-50 min-h-screen py-10">
+    <div className="min-h-screen py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {message && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl flex items-center shadow-sm">
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl flex items-center shadow-sm page-fade-in">
             <svg
               className="w-5 h-5 mr-3 text-green-500"
               fill="currentColor"
@@ -168,15 +168,15 @@ const DashboardPage = () => {
         <div className="flex flex-col md:flex-row gap-8">
           {/* Profile Sidebar */}
           <div className="w-full md:w-80 shrink-0">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
-              <div className="w-24 h-24 bg-brand-navy rounded-full mx-auto flex items-center justify-center text-3xl font-bold text-white mb-4 shadow-inner">
+            <div className="surface-panel p-6 text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-full mx-auto flex items-center justify-center text-3xl font-bold text-white mb-4 shadow-[0_20px_26px_rgba(10,108,255,0.28)]">
                 {user.name.charAt(0)}
               </div>
               <h2 className="text-xl font-bold text-slate-900">{user.name}</h2>
               <p className="text-slate-500 text-sm mb-6">{user.email}</p>
               <div className="pt-6 border-t border-slate-100 flex justify-between text-sm">
                 <span className="text-slate-600">Total Bookings</span>
-                <span className="font-bold text-brand-navy">
+                <span className="font-bold text-slate-900">
                   {totalElements}
                 </span>
               </div>
@@ -185,8 +185,8 @@ const DashboardPage = () => {
 
           {/* Main Content - Bookings */}
           <div className="flex-1">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-              <h2 className="text-2xl font-bold text-brand-navy mb-6">
+            <div className="surface-panel p-8">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">
                 My Bookings
               </h2>
 
@@ -236,7 +236,7 @@ const DashboardPage = () => {
                         No active bookings right now.
                       </div>
                     ) : (
-                      <div className="space-y-4">
+                      <div className="space-y-4 stagger-children">
                         {activeBookings.map((booking) =>
                           renderBookingCard(booking),
                         )}
@@ -258,7 +258,7 @@ const DashboardPage = () => {
                         No cancelled or expired bookings in this page.
                       </div>
                     ) : (
-                      <div className="space-y-4">
+                      <div className="space-y-4 stagger-children">
                         {cancelledBookings.map((booking) =>
                           renderBookingCard(booking),
                         )}
@@ -271,7 +271,7 @@ const DashboardPage = () => {
                       <button
                         onClick={() => canGoPrev && setPage((prev) => prev - 1)}
                         disabled={!canGoPrev}
-                        className="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="btn-outline px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Previous
                       </button>
@@ -281,7 +281,7 @@ const DashboardPage = () => {
                       <button
                         onClick={() => canGoNext && setPage((prev) => prev + 1)}
                         disabled={!canGoNext}
-                        className="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="btn-outline px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Next
                       </button>

@@ -25,9 +25,14 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="flex flex-col min-h-screen">
+        <div className="app-shell">
+          <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+            <div className="absolute -left-24 top-20 h-64 w-64 rounded-full bg-cyan-300/30 blur-3xl animate-float-slow"></div>
+            <div className="absolute right-0 top-10 h-72 w-72 rounded-full bg-blue-300/30 blur-3xl animate-float-reverse"></div>
+            <div className="absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-orange-200/30 blur-3xl animate-float-slow"></div>
+          </div>
           <Navbar />
-          <main className="flex-grow">
+          <main className="app-main page-fade-in">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />

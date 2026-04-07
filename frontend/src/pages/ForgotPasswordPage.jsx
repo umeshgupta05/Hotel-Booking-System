@@ -42,16 +42,16 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center relative overflow-hidden bg-[#09090b]">
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-cyan-300/20 blur-[120px] mix-blend-screen pointer-events-none"></div>
-      <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-rose-300/20 blur-[150px] mix-blend-screen pointer-events-none"></div>
+    <div className="auth-shell">
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-cyan-300/28 blur-[120px] pointer-events-none animate-float-slow"></div>
+      <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-300/25 blur-[150px] pointer-events-none animate-float-reverse"></div>
 
-      <div className="w-full max-w-md p-10 m-4 relative z-10 rounded-3xl bg-white/[0.04] border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] backdrop-blur-2xl">
+      <div className="auth-card">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-rose-200 mb-2">
+          <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-blue-200 to-orange-200 mb-2">
             Forgot Password
           </h2>
-          <p className="text-slate-400 text-sm">
+          <p className="text-slate-300 text-sm">
             Enter your account email and we will send an OTP.
           </p>
         </div>
@@ -77,7 +77,7 @@ const ForgotPasswordPage = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-5 py-3.5 bg-black/30 border border-white/5 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-300/40 focus:border-cyan-300/40 transition-all shadow-inner"
+              className="auth-input"
               placeholder="you@example.com"
               autoComplete="email"
               required
@@ -87,17 +87,17 @@ const ForgotPasswordPage = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3.5 px-4 bg-gradient-to-r from-cyan-400/80 to-rose-400/80 hover:from-cyan-400 hover:to-rose-400 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(56,189,248,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3.5 px-4 bg-gradient-to-r from-cyan-400/85 via-blue-500/85 to-orange-400/85 hover:from-cyan-400 hover:via-blue-500 hover:to-orange-400 text-white font-bold rounded-xl transition-all shadow-[0_0_24px_rgba(56,189,248,0.26)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Sending..." : "Send OTP"}
           </button>
         </form>
 
-        <div className="mt-8 text-center text-sm text-slate-400">
+        <div className="mt-8 text-center text-sm text-slate-300">
           Remember your password?{" "}
           <Link
             to="/login"
-            className="text-cyan-300 hover:text-cyan-200 font-semibold transition-colors ml-1"
+            className="text-cyan-200 hover:text-white font-semibold transition-colors ml-1"
           >
             Back to login
           </Link>

@@ -135,8 +135,8 @@ const HotelDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-32 bg-slate-50 min-h-screen">
-        <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex justify-center py-32 min-h-screen">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -146,27 +146,27 @@ const HotelDetailsPage = () => {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-16">
+    <div className="min-h-screen pb-16">
       {/* Header Image */}
-      <div className="h-[400px] bg-slate-800 relative">
+      <div className="h-[420px] bg-slate-800 relative">
         <img
           src={imageSrc}
           alt={hotel.name}
-          className="w-full h-full object-cover opacity-70"
+          className="w-full h-full object-cover opacity-80"
           onError={(e) => {
             e.currentTarget.onerror = null;
             e.currentTarget.src =
               "https://placehold.co/1600x900?text=Hotel+Image";
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#081a2b]/90 via-[#081a2b]/20 to-transparent"></div>
         <div className="absolute bottom-0 left-0 w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
             <Link
               to="/hotels"
-              className="text-white hover:text-brand-accent text-sm mb-4 inline-flex items-center"
+              className="text-white/90 hover:text-cyan-200 text-sm mb-4 inline-flex items-center font-medium"
             >
-              &larr; Back to Hotels
+              Back to Hotels
             </Link>
             <div className="flex justify-between items-end">
               <div>
@@ -174,7 +174,7 @@ const HotelDetailsPage = () => {
                   {hotel.name}
                 </h1>
                 <div className="flex items-center text-slate-200 space-x-4">
-                  <span className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+                  <span className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold">
                     <svg
                       className="w-4 h-4 text-yellow-400 mr-1"
                       fill="currentColor"
@@ -196,7 +196,7 @@ const HotelDetailsPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
+            <div className="surface-panel p-8">
               <h2 className="text-2xl font-bold text-slate-900 mb-4">
                 About this property
               </h2>
@@ -210,7 +210,7 @@ const HotelDetailsPage = () => {
               </p>
             </div>
 
-            <div className="bg-white text-left rounded-2xl shadow-sm border border-slate-100 p-8">
+            <div className="surface-panel text-left p-8">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">
                 Available Rooms
               </h2>
@@ -231,7 +231,7 @@ const HotelDetailsPage = () => {
               </div>
             </div>
 
-            <div className="bg-white text-left rounded-2xl shadow-sm border border-slate-100 p-8">
+            <div className="surface-panel text-left p-8">
               <h2 className="text-2xl font-bold text-slate-900 mb-2">
                 Guest Reviews & Ratings
               </h2>
@@ -242,7 +242,7 @@ const HotelDetailsPage = () => {
 
               <form
                 onSubmit={handleSubmitReview}
-                className="space-y-4 border border-slate-200 rounded-xl p-4 mb-6"
+                className="space-y-4 surface-glass rounded-xl p-4 mb-6"
               >
                 {reviewError && (
                   <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">
@@ -262,7 +262,7 @@ const HotelDetailsPage = () => {
                   <select
                     value={reviewRating}
                     onChange={(e) => setReviewRating(Number(e.target.value))}
-                    className="w-full sm:w-56 px-3 py-2 border border-slate-300 rounded-lg"
+                    className="input-field w-full sm:w-56 px-3 py-2"
                   >
                     <option value={5}>5 - Excellent</option>
                     <option value={4}>4 - Very Good</option>
@@ -281,14 +281,14 @@ const HotelDetailsPage = () => {
                     onChange={(e) => setReviewComment(e.target.value)}
                     rows={3}
                     placeholder="Write your feedback..."
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                    className="input-field w-full px-3 py-2"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={reviewSubmitting}
-                  className="px-5 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-accent disabled:opacity-60"
+                  className="btn-primary px-5 py-2 disabled:opacity-60"
                 >
                   {reviewSubmitting
                     ? "Saving..."
@@ -309,7 +309,7 @@ const HotelDetailsPage = () => {
                   {reviews.map((review) => (
                     <div
                       key={review.reviewId || review.review_id}
-                      className="border border-slate-200 rounded-xl p-4"
+                      className="surface-glass rounded-xl p-4"
                     >
                       <div className="flex items-center justify-between gap-3 mb-2">
                         <span className="text-sm font-semibold text-slate-700">
@@ -329,7 +329,7 @@ const HotelDetailsPage = () => {
 
           {/* Map/Contact Sidebar */}
           <div className="space-y-6 mt-8 lg:mt-0">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div className="surface-panel p-6">
               <h3 className="font-bold text-lg text-brand-navy mb-4">
                 Property Info
               </h3>
@@ -391,7 +391,7 @@ const HotelDetailsPage = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div className="surface-panel p-6">
               <h3 className="font-bold text-lg text-brand-navy mb-4">
                 Amenities
               </h3>
@@ -401,7 +401,7 @@ const HotelDetailsPage = () => {
                   hotel.amenities.map((am) => (
                     <span
                       key={am.amenityId || am.amenity_id || am.name}
-                      className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-medium"
+                      className="bg-blue-50 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold border border-blue-100"
                     >
                       {am.name}
                     </span>

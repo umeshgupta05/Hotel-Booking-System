@@ -113,10 +113,10 @@ const PublishHotelPage = () => {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm mb-6">
-          <h1 className="text-2xl font-bold text-brand-navy">
+        <div className="surface-panel p-6 mb-6">
+          <h1 className="text-2xl font-bold text-slate-900">
             Publish Your Hotel
           </h1>
           <p className="text-slate-600 mt-1">
@@ -132,14 +132,14 @@ const PublishHotelPage = () => {
 
         <form
           onSubmit={handlePublish}
-          className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4"
+          className="surface-panel p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <input
             name="name"
             value={formData.name}
             onChange={handleChange}
             placeholder="Hotel Name"
-            className="px-4 py-2 border border-slate-200 rounded-lg"
+            className="input-field px-4 py-2"
             required
           />
           <input
@@ -149,7 +149,7 @@ const PublishHotelPage = () => {
             type="number"
             min="1"
             placeholder="Base Price"
-            className="px-4 py-2 border border-slate-200 rounded-lg"
+            className="input-field px-4 py-2"
             required
           />
           <input
@@ -158,7 +158,7 @@ const PublishHotelPage = () => {
             onChange={handleChange}
             type="email"
             placeholder="Contact Email"
-            className="px-4 py-2 border border-slate-200 rounded-lg"
+            className="input-field px-4 py-2"
             required
           />
           <input
@@ -166,7 +166,7 @@ const PublishHotelPage = () => {
             value={formData.contactPhone}
             onChange={handleChange}
             placeholder="Contact Phone"
-            className="px-4 py-2 border border-slate-200 rounded-lg"
+            className="input-field px-4 py-2"
             required
           />
           <input
@@ -174,7 +174,7 @@ const PublishHotelPage = () => {
             value={formData.imageUrl}
             onChange={handleChange}
             placeholder="Image URL (optional)"
-            className="px-4 py-2 border border-slate-200 rounded-lg md:col-span-2"
+            className="input-field px-4 py-2 md:col-span-2"
           />
 
           <textarea
@@ -183,7 +183,7 @@ const PublishHotelPage = () => {
             onChange={handleChange}
             placeholder="Hotel Description"
             rows={4}
-            className="px-4 py-2 border border-slate-200 rounded-lg md:col-span-2"
+            className="input-field px-4 py-2 md:col-span-2"
             required
           />
 
@@ -192,7 +192,7 @@ const PublishHotelPage = () => {
             value={formData.street}
             onChange={handleChange}
             placeholder="Street"
-            className="px-4 py-2 border border-slate-200 rounded-lg"
+            className="input-field px-4 py-2"
             required
           />
           <input
@@ -200,7 +200,7 @@ const PublishHotelPage = () => {
             value={formData.city}
             onChange={handleChange}
             placeholder="City"
-            className="px-4 py-2 border border-slate-200 rounded-lg"
+            className="input-field px-4 py-2"
             required
           />
           <input
@@ -208,7 +208,7 @@ const PublishHotelPage = () => {
             value={formData.state}
             onChange={handleChange}
             placeholder="State"
-            className="px-4 py-2 border border-slate-200 rounded-lg"
+            className="input-field px-4 py-2"
             required
           />
           <input
@@ -216,7 +216,7 @@ const PublishHotelPage = () => {
             value={formData.country}
             onChange={handleChange}
             placeholder="Country"
-            className="px-4 py-2 border border-slate-200 rounded-lg"
+            className="input-field px-4 py-2"
             required
           />
           <input
@@ -224,7 +224,7 @@ const PublishHotelPage = () => {
             value={formData.zipCode}
             onChange={handleChange}
             placeholder="Zip Code"
-            className="px-4 py-2 border border-slate-200 rounded-lg md:col-span-2"
+            className="input-field px-4 py-2 md:col-span-2"
             required
           />
 
@@ -239,7 +239,7 @@ const PublishHotelPage = () => {
                   return (
                     <label
                       key={amenityId}
-                      className="flex items-center gap-2 p-2 border border-slate-200 rounded-lg"
+                      className="flex items-center gap-2 p-2 border border-slate-200/90 rounded-lg bg-white/70"
                     >
                       <input
                         type="checkbox"
@@ -260,7 +260,7 @@ const PublishHotelPage = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-accent disabled:opacity-60"
+              className="btn-primary px-5 py-2 disabled:opacity-60"
             >
               {submitting ? "Publishing..." : "Publish Hotel"}
             </button>

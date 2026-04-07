@@ -227,19 +227,17 @@ const AdminDashboardPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
-          <h1 className="text-2xl font-bold text-brand-navy">
-            Admin Dashboard
-          </h1>
+        <div className="surface-panel p-6">
+          <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
           <p className="text-slate-600 mt-1">
             Manage your property profile, services, and room inventory.
           </p>
@@ -258,27 +256,27 @@ const AdminDashboardPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+          <div className="surface-panel p-6">
             <p className="text-sm text-slate-500">Managed Hotel</p>
-            <p className="text-xl font-bold text-brand-navy mt-1">
+            <p className="text-xl font-bold text-slate-900 mt-1">
               {hotel?.name || "-"}
             </p>
           </div>
-          <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+          <div className="surface-panel p-6">
             <p className="text-sm text-slate-500">Total Rooms</p>
-            <p className="text-xl font-bold text-brand-navy mt-1">
+            <p className="text-xl font-bold text-slate-900 mt-1">
               {rooms.length}
             </p>
           </div>
-          <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+          <div className="surface-panel p-6">
             <p className="text-sm text-slate-500">Available Rooms</p>
-            <p className="text-xl font-bold text-brand-navy mt-1">
+            <p className="text-xl font-bold text-slate-900 mt-1">
               {totalAvailableRooms}
             </p>
           </div>
         </div>
 
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+        <div className="surface-panel p-6">
           <h2 className="text-lg font-bold text-slate-900 mb-4">
             Hotel Details
           </h2>
@@ -292,7 +290,7 @@ const AdminDashboardPage = () => {
                 setHotelForm((prev) => ({ ...prev, name: e.target.value }))
               }
               placeholder="Hotel Name"
-              className="px-4 py-2 border border-slate-200 rounded-lg"
+              className="input-field px-4 py-2"
               required
             />
             <input
@@ -303,7 +301,7 @@ const AdminDashboardPage = () => {
               type="number"
               min="1"
               placeholder="Base Price"
-              className="px-4 py-2 border border-slate-200 rounded-lg"
+              className="input-field px-4 py-2"
             />
             <input
               value={hotelForm.contactEmail}
@@ -315,7 +313,7 @@ const AdminDashboardPage = () => {
               }
               type="email"
               placeholder="Contact Email"
-              className="px-4 py-2 border border-slate-200 rounded-lg"
+              className="input-field px-4 py-2"
             />
             <input
               value={hotelForm.contactPhone}
@@ -326,7 +324,7 @@ const AdminDashboardPage = () => {
                 }))
               }
               placeholder="Contact Phone"
-              className="px-4 py-2 border border-slate-200 rounded-lg"
+              className="input-field px-4 py-2"
             />
             <input
               value={hotelForm.imageUrl}
@@ -334,7 +332,7 @@ const AdminDashboardPage = () => {
                 setHotelForm((prev) => ({ ...prev, imageUrl: e.target.value }))
               }
               placeholder="Image URL"
-              className="px-4 py-2 border border-slate-200 rounded-lg md:col-span-2"
+              className="input-field px-4 py-2 md:col-span-2"
             />
             <textarea
               value={hotelForm.description}
@@ -346,13 +344,13 @@ const AdminDashboardPage = () => {
               }
               placeholder="Description"
               rows={4}
-              className="px-4 py-2 border border-slate-200 rounded-lg md:col-span-2"
+              className="input-field px-4 py-2 md:col-span-2"
             />
             <div className="md:col-span-2">
               <button
                 type="submit"
                 disabled={savingHotel}
-                className="px-5 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-accent disabled:opacity-60"
+                className="btn-primary px-5 py-2 disabled:opacity-60"
               >
                 {savingHotel ? "Saving..." : "Save Hotel Details"}
               </button>
@@ -360,7 +358,7 @@ const AdminDashboardPage = () => {
           </form>
         </div>
 
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+        <div className="surface-panel p-6">
           <h2 className="text-lg font-bold text-slate-900 mb-4">
             Hotel Services (Amenities)
           </h2>
@@ -370,7 +368,7 @@ const AdminDashboardPage = () => {
               return (
                 <label
                   key={amenityId}
-                  className="flex items-center gap-2 p-2 border border-slate-200 rounded-lg"
+                  className="flex items-center gap-2 p-2 border border-slate-200 rounded-lg bg-white/70"
                 >
                   <input
                     type="checkbox"
@@ -386,13 +384,13 @@ const AdminDashboardPage = () => {
             type="button"
             onClick={handleAmenitiesSave}
             disabled={savingAmenities}
-            className="mt-4 px-5 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-accent disabled:opacity-60"
+            className="mt-4 btn-primary px-5 py-2 disabled:opacity-60"
           >
             {savingAmenities ? "Saving..." : "Save Services"}
           </button>
         </div>
 
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+        <div className="surface-panel p-6">
           <h2 className="text-lg font-bold text-slate-900 mb-4">
             Add New Room
           </h2>
@@ -406,7 +404,7 @@ const AdminDashboardPage = () => {
                 setNewRoom((prev) => ({ ...prev, roomNumber: e.target.value }))
               }
               placeholder="Room Number"
-              className="px-4 py-2 border border-slate-200 rounded-lg"
+              className="input-field px-4 py-2"
               required
             />
             <select
@@ -414,7 +412,7 @@ const AdminDashboardPage = () => {
               onChange={(e) =>
                 setNewRoom((prev) => ({ ...prev, categoryId: e.target.value }))
               }
-              className="px-4 py-2 border border-slate-200 rounded-lg"
+              className="input-field px-4 py-2"
               required
             >
               <option value="">Select Category</option>
@@ -444,14 +442,14 @@ const AdminDashboardPage = () => {
             <button
               type="submit"
               disabled={addingRoom}
-              className="px-5 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-accent disabled:opacity-60"
+              className="btn-primary px-5 py-2 disabled:opacity-60"
             >
               {addingRoom ? "Adding..." : "Add Room"}
             </button>
           </form>
         </div>
 
-        <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+        <div className="surface-panel p-6">
           <h2 className="text-lg font-bold text-slate-900 mb-4">
             Manage Rooms
           </h2>
@@ -469,14 +467,14 @@ const AdminDashboardPage = () => {
               return (
                 <div
                   key={roomId}
-                  className="grid grid-cols-1 lg:grid-cols-5 gap-3 p-4 border border-slate-200 rounded-xl"
+                  className="grid grid-cols-1 lg:grid-cols-5 gap-3 p-4 border border-slate-200 rounded-xl bg-white/70"
                 >
                   <input
                     value={room.roomNumber || room.room_number || ""}
                     onChange={(e) =>
                       updateRoomLocal(roomId, "roomNumber", e.target.value)
                     }
-                    className="px-3 py-2 border border-slate-200 rounded-lg"
+                    className="input-field px-3 py-2"
                   />
 
                   <select
@@ -488,7 +486,7 @@ const AdminDashboardPage = () => {
                         Number(e.target.value),
                       )
                     }
-                    className="px-3 py-2 border border-slate-200 rounded-lg"
+                    className="input-field px-3 py-2"
                   >
                     {categories.map((category) => {
                       const id = category.categoryId || category.category_id;
@@ -518,7 +516,7 @@ const AdminDashboardPage = () => {
                   <button
                     type="button"
                     onClick={() => handleRoomSave(room)}
-                    className="px-4 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-accent"
+                    className="btn-primary px-4 py-2"
                   >
                     Save
                   </button>
@@ -526,7 +524,7 @@ const AdminDashboardPage = () => {
                   <button
                     type="button"
                     onClick={() => handleRoomDelete(roomId)}
-                    className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100"
+                    className="btn-outline px-4 py-2 border-red-200 text-red-600 bg-red-50 hover:bg-red-100"
                   >
                     Delete
                   </button>
