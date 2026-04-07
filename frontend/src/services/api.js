@@ -78,8 +78,29 @@ const getAuthHeaders = () => {
 
 const handleResponse = async (response) => {
   if (!response.ok) {
-    const errorMsg = await response.text();
-    throw new Error(errorMsg || "API Request Failed");
+    let errorMsg = "API Request Failed";
+
+    try {
+      const bodyText = await response.text();
+      if (bodyText) {
+        try {
+          const parsed = JSON.parse(bodyText);
+          errorMsg = parsed.message || parsed.error || bodyText;
+        } catch {
+          errorMsg = bodyText;
+        }
+      }
+    } catch {
+      errorMsg = "API Request Failed";
+    }
+
+    if (response.status === 401) {
+      localStorage.removeItem("hotel_user");
+      localStorage.removeItem("hotel_token");
+      throw new Error("Session expired. Please log in again.");
+    }
+
+    throw new Error(errorMsg);
   }
 
   if (response.status === 204) {
@@ -167,6 +188,25 @@ export const api = {
       : [];
   },
 
+  // Razorpay
+  createRazorpayOrder: async (orderRequest) => {
+    const response = await fetch(`${API_BASE_URL}/payments/create-order`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(orderRequest),
+    });
+    return await handleResponse(response);
+  },
+
+  verifyPaymentSignature: async (verifyRequest) => {
+    const response = await fetch(`${API_BASE_URL}/payments/verify-signature`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(verifyRequest),
+    });
+    return await handleResponse(response);
+  },
+
   // Bookings
   createBooking: async (bookingData) => {
     const response = await fetch(`${API_BASE_URL}/bookings`, {
@@ -199,7 +239,7 @@ export const api = {
     return await handleResponse(response);
   },
 
-  getUserBookings: async (userId) => {
+  getUserBookings: async () => {
     const response = await fetch(`${API_BASE_URL}/bookings/my-history`, {
       headers: getAuthHeaders(),
     });

@@ -37,8 +37,13 @@ resilience4j:
 
 app:
   jwt:
-    secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    secret: 926D96C90030DD58429D2751AC1BDBBC926D96C90030DD58429D2751AC1BDBBC
     expirationMs: 86400000
+
+razorpay:
+  key:
+    id: rzp_test_SaXL0fheGFoGLq
+    secret: w1Dw3D9c3xK6KJOKh0ZU524L
 
 springdoc:
   api-docs:

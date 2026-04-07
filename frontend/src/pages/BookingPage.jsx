@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
-import { useAuth } from "../context/AuthContext";
+
+const toIsoDate = (date) => date.toISOString().slice(0, 10);
 
 const BookingPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const state = location.state;
+
+  const room = location.state?.room;
+  const selectedHotelId =
+    location.state?.hotelId ?? room?.hotel_id ?? room?.hotelId;
 
   const [hotel, setHotel] = useState(null);
   const [checkIn, setCheckIn] = useState("");
@@ -17,77 +20,100 @@ const BookingPage = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!state?.room || !state?.hotelId) {
-      navigate("/hotels");
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    setCheckIn(toIsoDate(today));
+    setCheckOut(toIsoDate(tomorrow));
+  }, []);
+
+  useEffect(() => {
+    if (!room || !selectedHotelId) {
+      navigate("/hotels", { replace: true });
       return;
     }
 
     const fetchHotel = async () => {
+      setLoading(true);
       try {
-        const data = await api.getHotelById(state.hotelId);
+        const data = await api.getHotelById(selectedHotelId);
         setHotel(data);
       } catch (err) {
-        console.error(err);
+        setError(err.message || "Failed to load hotel details.");
       } finally {
         setLoading(false);
       }
     };
-    fetchHotel();
-  }, [state, navigate]);
 
-  const calculateTotal = () => {
-    if (!checkIn || !checkOut) return state?.room?.base_price || 0;
+    fetchHotel();
+  }, [room, selectedHotelId, navigate]);
+
+  const roomPrice = useMemo(() => {
+    const value = room?.base_price ?? room?.basePrice ?? 0;
+    return Number(value) || 0;
+  }, [room]);
+
+  const nights = useMemo(() => {
+    if (!checkIn || !checkOut) return 1;
     const start = new Date(checkIn);
     const end = new Date(checkOut);
-    const diffTime = Math.abs(end - start);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0
-      ? state.room.base_price * diffDays
-      : state.room.base_price;
-  };
+    const diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    return diff > 0 ? diff : 1;
+  }, [checkIn, checkOut]);
+
+  const total = roomPrice * nights;
 
   const handleConfirm = async (e) => {
     e.preventDefault();
-    if (!checkIn || !checkOut)
-      return alert("Select check-in and check-out dates");
+    setError("");
 
-    const hotelId = hotel?.hotel_id ?? hotel?.hotelId ?? hotel?.id;
-    const roomId = state?.room?.room_id ?? state?.room?.roomId;
-    if (!hotelId || !roomId) {
-      setError("Missing hotel or room details. Please reopen this booking.");
+    if (!hotel || !room) {
+      setError("Booking details are incomplete. Please try again.");
       return;
     }
 
-    setError("");
-    setProcessing(true);
+    if (new Date(checkOut) <= new Date(checkIn)) {
+      setError("Check-out date must be after check-in date.");
+      return;
+    }
 
+    setProcessing(true);
     try {
       const booking = await api.createBooking({
-        user_id: user.user_id,
-        hotel_id: hotelId,
-        room_id: roomId,
-        check_in: checkIn,
-        check_out: checkOut,
-        total_amount: calculateTotal(),
+        hotelId: hotel.hotel_id ?? hotel.hotelId,
+        roomId: room.room_id ?? room.roomId,
+        checkIn,
+        checkOut,
       });
 
       await api.processPayment({
-        booking_id: booking.booking_id ?? booking.bookingId,
-        amount: booking.total_amount ?? booking.totalAmount ?? calculateTotal(),
-        payment_method: "PAY_AT_HOTEL",
+        bookingId: booking.booking_id ?? booking.bookingId,
+        amount: total,
+        method: "PAY_AT_HOTEL",
       });
 
       navigate("/dashboard", {
-        state: { message: "Booking and payment confirmed successfully!" },
+        replace: true,
+        state: { message: "Booking and payment recorded successfully." },
       });
     } catch (err) {
-      setError(err?.message || "Failed to confirm booking.");
+      setError(err.message || "Failed to confirm booking.");
+    } finally {
       setProcessing(false);
     }
   };
 
-  if (loading || !hotel)
+  if (loading) {
     return <div className="p-20 text-center">Loading...</div>;
+  }
+
+  if (!hotel || !room) {
+    return (
+      <div className="p-20 text-center">
+        {error || "Booking details not found."}
+      </div>
+    );
+  }
 
   const imageSrc =
     hotel.image_url ||
@@ -102,16 +128,17 @@ const BookingPage = () => {
         </h1>
 
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Booking Form */}
           <div className="flex-1 bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
             <h2 className="text-xl font-bold text-slate-800 mb-6">
               Reservation Details
             </h2>
+
             {error && (
-              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="mb-6 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm">
                 {error}
               </div>
             )}
+
             <form onSubmit={handleConfirm} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -122,6 +149,7 @@ const BookingPage = () => {
                     type="date"
                     required
                     value={checkIn}
+                    min={toIsoDate(new Date())}
                     onChange={(e) => setCheckIn(e.target.value)}
                     className="w-full px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-accent outline-none"
                   />
@@ -134,7 +162,7 @@ const BookingPage = () => {
                     type="date"
                     required
                     value={checkOut}
-                    min={checkIn}
+                    min={checkIn || toIsoDate(new Date())}
                     onChange={(e) => setCheckOut(e.target.value)}
                     className="w-full px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-accent outline-none"
                   />
@@ -161,22 +189,21 @@ const BookingPage = () => {
               <button
                 type="submit"
                 disabled={processing}
-                className="w-full py-4 bg-brand-blue hover:bg-brand-accent text-white font-bold rounded-xl transition-colors shadow-lg shadow-brand-blue/20 disabled:opacity-70 mt-4"
+                className="w-full py-4 bg-brand-blue hover:bg-brand-accent text-white font-bold rounded-xl transition-colors shadow-lg shadow-brand-blue/20 disabled:opacity-70"
               >
                 {processing
                   ? "Processing..."
-                  : `Confirm Booking - ₹${calculateTotal()}`}
+                  : `Confirm Booking - ₹${total.toLocaleString()}`}
               </button>
             </form>
           </div>
 
-          {/* Summary Sidebar */}
           <div className="w-full md:w-80 shrink-0">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 sticky top-24">
               <div className="h-40 bg-slate-100 rounded-xl mb-4 overflow-hidden">
                 <img
                   src={imageSrc}
-                  alt="Hotel"
+                  alt={hotel.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.onerror = null;
@@ -189,24 +216,26 @@ const BookingPage = () => {
                 {hotel.name}
               </h3>
               <p className="text-sm text-slate-500 mb-4">
-                {state.room.category_name}
+                {room.category_name || room.categoryName || "Room"}
               </p>
 
               <div className="space-y-3 pt-4 border-t border-slate-100 text-sm">
                 <div className="flex justify-between">
                   <span className="text-slate-600">Base Price (per night)</span>
-                  <span className="font-medium">₹{state.room.base_price}</span>
+                  <span className="font-medium">
+                    ₹{roomPrice.toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Taxes & Fees</span>
-                  <span className="font-medium">Included</span>
+                  <span className="text-slate-600">Nights</span>
+                  <span className="font-medium">{nights}</span>
                 </div>
               </div>
 
               <div className="pt-4 mt-4 border-t border-slate-100 flex justify-between items-center">
                 <span className="font-bold text-slate-900">Total</span>
                 <span className="text-2xl font-bold text-brand-blue">
-                  ₹{calculateTotal()}
+                  ₹{total.toLocaleString()}
                 </span>
               </div>
             </div>

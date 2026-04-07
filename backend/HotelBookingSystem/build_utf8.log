@@ -1,0 +1,193 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.example:HotelBookingSystem >-------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ HotelBookingSystem ---
+[INFO] Deleting E:\spring\home\backend\HotelBookingSystem\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ HotelBookingSystem ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ HotelBookingSystem ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling with eclipse [debug parameters release 21] to target\classes
+[INFO] -------------------------------------------------------------
+[WARNING] COMPILATION WARNING : 
+[INFO] -------------------------------------------------------------
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\JwtResponse.java:[9,20] The value of the field com.example.HotelBookingSystem.dto.JwtResponse.token is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\JwtResponse.java:[10,18] The value of the field com.example.HotelBookingSystem.dto.JwtResponse.id is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\JwtResponse.java:[11,20] The value of the field com.example.HotelBookingSystem.dto.JwtResponse.name is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\JwtResponse.java:[12,20] The value of the field com.example.HotelBookingSystem.dto.JwtResponse.email is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\JwtResponse.java:[13,20] The value of the field com.example.HotelBookingSystem.dto.JwtResponse.role is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\MessageResponse.java:[9,20] The value of the field com.example.HotelBookingSystem.dto.MessageResponse.message is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayOrderRequest.java:[7,18] The value of the field com.example.HotelBookingSystem.dto.RazorpayOrderRequest.amount is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayOrderRequest.java:[8,20] The value of the field com.example.HotelBookingSystem.dto.RazorpayOrderRequest.currency is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayOrderRequest.java:[9,20] The value of the field com.example.HotelBookingSystem.dto.RazorpayOrderRequest.receipt is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayOrderRequest.java:[10,18] The value of the field com.example.HotelBookingSystem.dto.RazorpayOrderRequest.bookingId is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayOrderResponse.java:[11,20] The value of the field com.example.HotelBookingSystem.dto.RazorpayOrderResponse.orderId is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayOrderResponse.java:[12,18] The value of the field com.example.HotelBookingSystem.dto.RazorpayOrderResponse.amount is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayOrderResponse.java:[13,20] The value of the field com.example.HotelBookingSystem.dto.RazorpayOrderResponse.currency is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayVerifyRequest.java:[7,20] The value of the field com.example.HotelBookingSystem.dto.RazorpayVerifyRequest.razorpayOrderId is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayVerifyRequest.java:[8,20] The value of the field com.example.HotelBookingSystem.dto.RazorpayVerifyRequest.razorpayPaymentId is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayVerifyRequest.java:[9,20] The value of the field com.example.HotelBookingSystem.dto.RazorpayVerifyRequest.razorpaySignature is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\RazorpayVerifyRequest.java:[10,18] The value of the field com.example.HotelBookingSystem.dto.RazorpayVerifyRequest.bookingId is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\dto\ReviewRequest.java:[14,20] The value of the field com.example.HotelBookingSystem.dto.ReviewRequest.comment is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Address.java:[23,20] The value of the field com.example.HotelBookingSystem.entity.Address.street is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Address.java:[24,20] The value of the field com.example.HotelBookingSystem.entity.Address.city is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Address.java:[25,20] The value of the field com.example.HotelBookingSystem.entity.Address.state is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Address.java:[26,20] The value of the field com.example.HotelBookingSystem.entity.Address.country is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Address.java:[27,20] The value of the field com.example.HotelBookingSystem.entity.Address.zipCode is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Amenity.java:[18,20] The value of the field com.example.HotelBookingSystem.entity.Amenity.name is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Booking.java:[43,23] The value of the field com.example.HotelBookingSystem.entity.Booking.checkIn is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Booking.java:[45,23] The value of the field com.example.HotelBookingSystem.entity.Booking.checkOut is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Booking.java:[47,20] The value of the field com.example.HotelBookingSystem.entity.Booking.totalAmount is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Booking.java:[50,20] The value of the field com.example.HotelBookingSystem.entity.Booking.status is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Hotel.java:[23,20] The value of the field com.example.HotelBookingSystem.entity.Hotel.name is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Hotel.java:[34,20] The value of the field com.example.HotelBookingSystem.entity.Hotel.rating is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Hotel.java:[35,20] The value of the field com.example.HotelBookingSystem.entity.Hotel.contactEmail is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Hotel.java:[36,20] The value of the field com.example.HotelBookingSystem.entity.Hotel.contactPhone is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Notification.java:[33,20] The value of the field com.example.HotelBookingSystem.entity.Notification.type is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Notification.java:[35,20] The value of the field com.example.HotelBookingSystem.entity.Notification.status is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Payment.java:[28,20] The value of the field com.example.HotelBookingSystem.entity.Payment.amount is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Payment.java:[29,20] The value of the field com.example.HotelBookingSystem.entity.Payment.method is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Payment.java:[30,20] The value of the field com.example.HotelBookingSystem.entity.Payment.status is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Review.java:[35,20] The value of the field com.example.HotelBookingSystem.entity.Review.rating is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Room.java:[32,20] The value of the field com.example.HotelBookingSystem.entity.Room.roomNumber is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\Room.java:[33,21] The value of the field com.example.HotelBookingSystem.entity.Room.availability is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\RoomCategory.java:[18,20] The value of the field com.example.HotelBookingSystem.entity.RoomCategory.name is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\RoomCategory.java:[19,20] The value of the field com.example.HotelBookingSystem.entity.RoomCategory.basePrice is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\RoomCategory.java:[20,21] The value of the field com.example.HotelBookingSystem.entity.RoomCategory.capacity is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\User.java:[18,20] The value of the field com.example.HotelBookingSystem.entity.User.name is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\entity\User.java:[26,20] The value of the field com.example.HotelBookingSystem.entity.User.role is not used
+[WARNING] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[11,14] The serializable class UserDetailsImpl does not declare a static final serialVersionUID field of type long
+[INFO] 46 warnings 
+[INFO] -------------------------------------------------------------
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[30,18] The method getUserId() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[31,18] The method getName() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[32,18] The method getEmail() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[33,18] The method getPassword() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[34,25] The method singletonList(T) in the type java.util.Collections is not applicable for the arguments (org.springframework.security.core.authority.SimpleGrantedAuthority)
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[34,71] The method getRole() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[34,110] The method getRole() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[35,71] The method getEmail() is undefined for the type com.example.HotelBookingSystem.dto.SigninRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[35,97] The method getPassword() is undefined for the type com.example.HotelBookingSystem.dto.SigninRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[42,16] The constructor com.example.HotelBookingSystem.dto.JwtResponse(java.lang.String, java.lang.Long, java.lang.String, java.lang.String, java.lang.String) is undefined
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[50,56] The method getEmail() is undefined for the type com.example.HotelBookingSystem.dto.SignupRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[55,36] The method getName() is undefined for the type com.example.HotelBookingSystem.dto.SignupRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[56,37] The method getEmail() is undefined for the type com.example.HotelBookingSystem.dto.SignupRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[57,55] The method getPassword() is undefined for the type com.example.HotelBookingSystem.dto.SignupRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[58,14] The method setRole(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[62,16] The constructor com.example.HotelBookingSystem.dto.MessageResponse(java.lang.String) is undefined
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[30,56] The method getHotelId() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[31,53] The method getRoomId() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[33,18] The method getHotel() is undefined for the type com.example.HotelBookingSystem.entity.Room
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[33,55] The method getHotelId() is undefined for the type com.example.HotelBookingSystem.entity.Hotel
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[37,53] The method getCheckIn() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[37,75] The method getCheckOut() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[40,35] The method getRoomCategory() is undefined for the type com.example.HotelBookingSystem.entity.Room
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[43,17] The method setUser(com.example.HotelBookingSystem.entity.User) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[44,17] The method setHotel(com.example.HotelBookingSystem.entity.Hotel) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[45,17] The method setRoom(com.example.HotelBookingSystem.entity.Room) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[46,36] The method getCheckIn() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[47,37] The method getCheckOut() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[48,17] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[49,17] The method setTotalAmount(double) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[64,17] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[40,75] The method getBookingId() is undefined for the type com.example.HotelBookingSystem.dto.PaymentRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[46,17] The method setBooking(com.example.HotelBookingSystem.entity.Booking) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[47,35] The method getAmount() is undefined for the type com.example.HotelBookingSystem.dto.PaymentRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[48,35] The method getMethod() is undefined for the type com.example.HotelBookingSystem.dto.PaymentRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[49,17] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[52,17] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[63,48] The method getAmount() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayOrderRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[70,29] The method getAmount() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayOrderRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[83,29] The method getRazorpayOrderId() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayVerifyRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[83,66] The method getRazorpayPaymentId() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayVerifyRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[86,52] The method getRazorpaySignature() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayVerifyRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[91,79] The method getBookingId() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayVerifyRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[97,21] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[101,21] The method setBooking(com.example.HotelBookingSystem.entity.Booking) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[102,39] The method getTotalAmount() is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[103,21] The method setMethod(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[104,21] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[25,56] The method getHotelId() is undefined for the type com.example.HotelBookingSystem.dto.ReviewRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[28,16] The method setUser(com.example.HotelBookingSystem.entity.User) is undefined for the type com.example.HotelBookingSystem.entity.Review
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[29,16] The method setHotel(com.example.HotelBookingSystem.entity.Hotel) is undefined for the type com.example.HotelBookingSystem.entity.Review
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[30,34] The method getRating() is undefined for the type com.example.HotelBookingSystem.dto.ReviewRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[31,35] The method getComment() is undefined for the type com.example.HotelBookingSystem.dto.ReviewRequest
+[INFO] 53 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.042 s
+[INFO] Finished at: 2026-04-07T14:13:49+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project HotelBookingSystem: Compilation failure: Compilation failure: 
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[30,18] The method getUserId() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[31,18] The method getName() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[32,18] The method getEmail() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[33,18] The method getPassword() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[34,25] The method singletonList(T) in the type java.util.Collections is not applicable for the arguments (org.springframework.security.core.authority.SimpleGrantedAuthority)
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[34,71] The method getRole() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\security\UserDetailsImpl.java:[34,110] The method getRole() is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[35,71] The method getEmail() is undefined for the type com.example.HotelBookingSystem.dto.SigninRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[35,97] The method getPassword() is undefined for the type com.example.HotelBookingSystem.dto.SigninRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[42,16] The constructor com.example.HotelBookingSystem.dto.JwtResponse(java.lang.String, java.lang.Long, java.lang.String, java.lang.String, java.lang.String) is undefined
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[50,56] The method getEmail() is undefined for the type com.example.HotelBookingSystem.dto.SignupRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[55,36] The method getName() is undefined for the type com.example.HotelBookingSystem.dto.SignupRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[56,37] The method getEmail() is undefined for the type com.example.HotelBookingSystem.dto.SignupRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[57,55] The method getPassword() is undefined for the type com.example.HotelBookingSystem.dto.SignupRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[58,14] The method setRole(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.User
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\AuthService.java:[62,16] The constructor com.example.HotelBookingSystem.dto.MessageResponse(java.lang.String) is undefined
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[30,56] The method getHotelId() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[31,53] The method getRoomId() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[33,18] The method getHotel() is undefined for the type com.example.HotelBookingSystem.entity.Room
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[33,55] The method getHotelId() is undefined for the type com.example.HotelBookingSystem.entity.Hotel
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[37,53] The method getCheckIn() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[37,75] The method getCheckOut() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[40,35] The method getRoomCategory() is undefined for the type com.example.HotelBookingSystem.entity.Room
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[43,17] The method setUser(com.example.HotelBookingSystem.entity.User) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[44,17] The method setHotel(com.example.HotelBookingSystem.entity.Hotel) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[45,17] The method setRoom(com.example.HotelBookingSystem.entity.Room) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[46,36] The method getCheckIn() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[47,37] The method getCheckOut() is undefined for the type com.example.HotelBookingSystem.dto.BookingRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[48,17] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[49,17] The method setTotalAmount(double) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\BookingService.java:[64,17] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[40,75] The method getBookingId() is undefined for the type com.example.HotelBookingSystem.dto.PaymentRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[46,17] The method setBooking(com.example.HotelBookingSystem.entity.Booking) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[47,35] The method getAmount() is undefined for the type com.example.HotelBookingSystem.dto.PaymentRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[48,35] The method getMethod() is undefined for the type com.example.HotelBookingSystem.dto.PaymentRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[49,17] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[52,17] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[63,48] The method getAmount() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayOrderRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[70,29] The method getAmount() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayOrderRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[83,29] The method getRazorpayOrderId() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayVerifyRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[83,66] The method getRazorpayPaymentId() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayVerifyRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[86,52] The method getRazorpaySignature() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayVerifyRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[91,79] The method getBookingId() is undefined for the type com.example.HotelBookingSystem.dto.RazorpayVerifyRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[97,21] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[101,21] The method setBooking(com.example.HotelBookingSystem.entity.Booking) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[102,39] The method getTotalAmount() is undefined for the type com.example.HotelBookingSystem.entity.Booking
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[103,21] The method setMethod(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\PaymentService.java:[104,21] The method setStatus(java.lang.String) is undefined for the type com.example.HotelBookingSystem.entity.Payment
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[25,56] The method getHotelId() is undefined for the type com.example.HotelBookingSystem.dto.ReviewRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[28,16] The method setUser(com.example.HotelBookingSystem.entity.User) is undefined for the type com.example.HotelBookingSystem.entity.Review
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[29,16] The method setHotel(com.example.HotelBookingSystem.entity.Hotel) is undefined for the type com.example.HotelBookingSystem.entity.Review
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[30,34] The method getRating() is undefined for the type com.example.HotelBookingSystem.dto.ReviewRequest
+[ERROR] E:\spring\home\backend\HotelBookingSystem\src\main\java\com\example\HotelBookingSystem\service\ReviewService.java:[31,35] The method getComment() is undefined for the type com.example.HotelBookingSystem.dto.ReviewRequest
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

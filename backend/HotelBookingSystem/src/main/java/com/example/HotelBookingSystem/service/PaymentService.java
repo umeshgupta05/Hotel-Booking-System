@@ -1,60 +1,111 @@
 package com.example.HotelBookingSystem.service;
 
 import com.example.HotelBookingSystem.dto.PaymentRequest;
+import com.example.HotelBookingSystem.dto.RazorpayOrderRequest;
+import com.example.HotelBookingSystem.dto.RazorpayOrderResponse;
+import com.example.HotelBookingSystem.dto.RazorpayVerifyRequest;
 import com.example.HotelBookingSystem.entity.Booking;
 import com.example.HotelBookingSystem.entity.Payment;
 import com.example.HotelBookingSystem.repository.BookingRepository;
 import com.example.HotelBookingSystem.repository.PaymentRepository;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
+import org.apache.commons.codec.digest.HmacUtils;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+
+import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
 public class PaymentService {
+
     @Autowired
     private PaymentRepository paymentRepository;
 
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private RazorpayClient razorpayClient;
+
+    @Value("${razorpay.key.secret}")
+    private String razorpaySecret;
+
     @Transactional
-    public Payment processPayment(Long userId, PaymentRequest request) {
-        Booking booking = bookingRepository.findById(request.getBookingId())
-            .orElseThrow(() -> new RuntimeException("Booking not found"));
-
-        if (!booking.getUser().getUserId().equals(userId)) {
-            throw new RuntimeException("Unauthorized payment request");
+    public Payment processPayment(PaymentRequest request) {
+        Optional<Booking> bookingOpt = bookingRepository.findById(request.getBookingId());
+        if (bookingOpt.isEmpty()) {
+            throw new RuntimeException("Booking not found");
         }
-
-        if ("CANCELLED".equalsIgnoreCase(booking.getStatus())) {
-            throw new RuntimeException("Cannot pay for a cancelled booking");
-        }
-
-        Payment existing = paymentRepository.findByBookingBookingId(booking.getBookingId()).orElse(null);
-        if (existing != null) {
-            return existing;
-        }
-
-        double amount = request.getAmount() != null ? request.getAmount() : booking.getTotalAmount();
-        if (amount <= 0) {
-            throw new RuntimeException("Invalid payment amount");
-        }
-
-        String method = StringUtils.hasText(request.getMethod()) ? request.getMethod() : "PAY_AT_HOTEL";
         
         Payment payment = new Payment();
-        payment.setBooking(booking);
-        payment.setAmount(amount);
-        payment.setMethod(method);
-        payment.setStatus("SUCCESS");
+        payment.setBooking(bookingOpt.get());
+        payment.setAmount(request.getAmount());
+        payment.setMethod(request.getMethod());
+        payment.setStatus("COMPLETED");
         
-        payment = paymentRepository.save(payment);
-        
+        Booking booking = bookingOpt.get();
         booking.setStatus("CONFIRMED");
         bookingRepository.save(booking);
 
-        return payment;
+        return paymentRepository.save(payment);
+    }
+
+    @Transactional
+    public RazorpayOrderResponse createRazorpayOrder(RazorpayOrderRequest request) {
+        try {
+            JSONObject orderRequest = new JSONObject();
+            // amount in paise
+            orderRequest.put("amount", request.getAmount() * 100);
+            orderRequest.put("currency", "INR"); 
+            orderRequest.put("receipt", "txn_" + System.currentTimeMillis());
+
+            Order order = razorpayClient.orders.create(orderRequest);
+            return new RazorpayOrderResponse(
+                    order.get("id"),
+                    request.getAmount() * 100, // Returning paise
+                    "INR"
+            );
+        } catch (RazorpayException e) {
+            throw new RuntimeException("Error while creating Razorpay Order: " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    public Payment verifySignature(RazorpayVerifyRequest request) {
+        try {
+            // Documented verification spec: Generate HmacSHA256 signature using razorpaySecret
+            String generatedSignature = new HmacUtils("HmacSHA256", razorpaySecret).hmacHex(
+                    request.getRazorpayOrderId() + "|" + request.getRazorpayPaymentId()
+            );
+
+            if (!generatedSignature.equals(request.getRazorpaySignature())) {
+                throw new RuntimeException("Razorpay signature verification failed");
+            }
+            
+            // Signature applies. Update the DB booking to confirmed.
+            Optional<Booking> bookingOpt = bookingRepository.findById(request.getBookingId());
+            if (bookingOpt.isEmpty()) {
+                throw new RuntimeException("Booking not found to confirm payment");
+            }
+
+            Booking booking = bookingOpt.get();
+            booking.setStatus("CONFIRMED");
+            bookingRepository.save(booking);
+
+            Payment payment = new Payment();
+            payment.setBooking(booking);
+            payment.setAmount(booking.getTotalAmount());
+            payment.setMethod("RAZORPAY");
+            payment.setStatus("COMPLETED");
+            
+            return paymentRepository.save(payment);
+        } catch (Exception e) {
+            throw new RuntimeException("Error verifying signature: " + e.getMessage(), e);
+        }
     }
 }
