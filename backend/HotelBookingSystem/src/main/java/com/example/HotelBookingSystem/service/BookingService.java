@@ -27,6 +27,8 @@ public class BookingService {
     private HotelRepository hotelRepository;
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private EmailNotificationService emailNotificationService;
 
     @Transactional
     public Booking createBooking(Long userId, BookingRequest request) {
@@ -52,7 +54,9 @@ public class BookingService {
         booking.setStatus("PENDING");
         booking.setTotalAmount(totalAmount);
 
-        return bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
+        emailNotificationService.sendBookingCreatedEmail(savedBooking);
+        return savedBooking;
     }
 
     public List<Booking> getUserHistory(Long userId) {

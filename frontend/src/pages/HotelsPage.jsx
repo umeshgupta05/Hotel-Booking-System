@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import HotelCard from "../components/HotelCard";
 import { api } from "../services/api";
 
 const HotelsPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [allHotels, setAllHotels] = useState([]);
   const [displayedHotels, setDisplayedHotels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchInput, setSearchInput] = useState(searchParams.get("q") || "");
 
   // Filters state
   const [maxPrice, setMaxPrice] = useState(20000); // INR max limit
@@ -18,9 +21,13 @@ const HotelsPage = () => {
   };
 
   useEffect(() => {
+    const token = searchParams.get("q") || "";
+    setSearchInput(token);
+
     const fetchHotels = async () => {
+      setLoading(true);
       try {
-        const data = await api.getHotels();
+        const data = await api.getHotels({ q: token });
         setAllHotels(data);
         setDisplayedHotels(data);
       } catch (err) {
@@ -29,8 +36,9 @@ const HotelsPage = () => {
         setLoading(false);
       }
     };
+
     fetchHotels();
-  }, []);
+  }, [searchParams]);
 
   // Filter and Sort effect
   useEffect(() => {
@@ -61,6 +69,16 @@ const HotelsPage = () => {
     setMinRating(0);
     // Uncheck all radio/checkbox inputs by key or refs if needed,
     // for simplicity, resetting states is enough right now.
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const token = searchInput.trim();
+    if (token) {
+      setSearchParams({ q: token });
+    } else {
+      setSearchParams({});
+    }
   };
 
   return (
@@ -140,6 +158,25 @@ const HotelsPage = () => {
 
           {/* Hotel List */}
           <div className="flex-1">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="mb-4 flex flex-col sm:flex-row gap-3"
+            >
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search by hotel details"
+                className="flex-1 px-4 py-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent"
+              />
+              <button
+                type="submit"
+                className="px-5 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-accent transition-colors"
+              >
+                Search
+              </button>
+            </form>
+
             <div className="mb-6 flex justify-between items-center">
               <h1 className="text-2xl font-bold text-brand-navy">
                 Available Properties ({displayedHotels.length})

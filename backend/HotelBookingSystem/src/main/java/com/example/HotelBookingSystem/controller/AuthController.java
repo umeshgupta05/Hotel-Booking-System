@@ -1,7 +1,9 @@
 package com.example.HotelBookingSystem.controller;
 
+import com.example.HotelBookingSystem.dto.ForgotPasswordRequest;
 import com.example.HotelBookingSystem.dto.JwtResponse;
 import com.example.HotelBookingSystem.dto.MessageResponse;
+import com.example.HotelBookingSystem.dto.ResetPasswordRequest;
 import com.example.HotelBookingSystem.dto.SigninRequest;
 import com.example.HotelBookingSystem.dto.SignupRequest;
 import com.example.HotelBookingSystem.service.AuthService;
@@ -27,5 +29,17 @@ public class AuthController {
     @RateLimiter(name = "api")
     public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         return ResponseEntity.ok(authService.registerUser(signUpRequest));
+    }
+
+    @PostMapping("/forgot-password")
+    @RateLimiter(name = "api")
+    public ResponseEntity<MessageResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        return ResponseEntity.ok(authService.forgotPassword(request));
+    }
+
+    @PostMapping("/reset-password")
+    @RateLimiter(name = "api")
+    public ResponseEntity<MessageResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        return ResponseEntity.ok(authService.resetPassword(request));
     }
 }

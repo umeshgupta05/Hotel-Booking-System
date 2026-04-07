@@ -1,25 +1,21 @@
 package com.example.HotelBookingSystem.dto;
 
-import lombok.Data;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Data
-public class SignupRequest {
-    @NotBlank
-    @Size(min = 3, max = 50)
-    private String name;
-
+public class ResetPasswordRequest {
     @NotBlank
     @Email
     private String email;
 
     @NotBlank
-    @Size(min = 6, max = 40)
-    private String password;
+    @Size(min = 6, max = 6)
+    private String otp;
 
-    private String role;
-
-    private Long hotelId;
+    @NotBlank
+    @Size(min = 8, max = 64)
+    private String newPassword;
 }

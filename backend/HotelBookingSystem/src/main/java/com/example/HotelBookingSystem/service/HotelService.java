@@ -16,9 +16,10 @@ public class HotelService {
     private HotelRepository hotelRepository;
 
     @Cacheable("hotels")
-    public List<Hotel> searchHotels(String city, Double rating, Long amenityId) {
+    public List<Hotel> searchHotels(String query, String city, Double rating, Long amenityId) {
+        String qFilter = query == null ? "" : query.trim();
         String cityFilter = city == null ? "" : city;
-        return hotelRepository.searchHotels(cityFilter, rating, amenityId);
+        return hotelRepository.searchHotels(qFilter, cityFilter, rating, amenityId);
     }
 
     public Hotel getHotelById(Long id) {

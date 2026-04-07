@@ -78,6 +78,38 @@ INSERT INTO addresses (address_id, street, city, state, country, zip_code)
 SELECT 6, '9 Pine Trail', 'Manali', 'Himachal Pradesh', 'India', '175131'
 WHERE NOT EXISTS (SELECT 1 FROM addresses WHERE address_id = 6);
 
+INSERT INTO addresses (address_id, street, city, state, country, zip_code)
+SELECT 7, '14 Marina Drive', 'Chennai', 'Tamil Nadu', 'India', '600001'
+WHERE NOT EXISTS (SELECT 1 FROM addresses WHERE address_id = 7);
+
+INSERT INTO addresses (address_id, street, city, state, country, zip_code)
+SELECT 8, '202 Tech Valley Road', 'Hyderabad', 'Telangana', 'India', '500081'
+WHERE NOT EXISTS (SELECT 1 FROM addresses WHERE address_id = 8);
+
+INSERT INTO addresses (address_id, street, city, state, country, zip_code)
+SELECT 9, '33 Riverside Lane', 'Kolkata', 'West Bengal', 'India', '700001'
+WHERE NOT EXISTS (SELECT 1 FROM addresses WHERE address_id = 9);
+
+INSERT INTO addresses (address_id, street, city, state, country, zip_code)
+SELECT 10, '5 Harbour Front', 'Kochi', 'Kerala', 'India', '682001'
+WHERE NOT EXISTS (SELECT 1 FROM addresses WHERE address_id = 10);
+
+INSERT INTO addresses (address_id, street, city, state, country, zip_code)
+SELECT 11, '17 Lake Palace Road', 'Udaipur', 'Rajasthan', 'India', '313001'
+WHERE NOT EXISTS (SELECT 1 FROM addresses WHERE address_id = 11);
+
+INSERT INTO addresses (address_id, street, city, state, country, zip_code)
+SELECT 12, '89 Ghat View Street', 'Varanasi', 'Uttar Pradesh', 'India', '221001'
+WHERE NOT EXISTS (SELECT 1 FROM addresses WHERE address_id = 12);
+
+INSERT INTO addresses (address_id, street, city, state, country, zip_code)
+SELECT 13, '41 Green Park Avenue', 'Pune', 'Maharashtra', 'India', '411001'
+WHERE NOT EXISTS (SELECT 1 FROM addresses WHERE address_id = 13);
+
+INSERT INTO addresses (address_id, street, city, state, country, zip_code)
+SELECT 14, '11 Boulevard Residency', 'Srinagar', 'Jammu and Kashmir', 'India', '190001'
+WHERE NOT EXISTS (SELECT 1 FROM addresses WHERE address_id = 14);
+
 -- Amenities
 INSERT INTO amenities (amenity_id, name)
 SELECT 1, 'Free WiFi' WHERE NOT EXISTS (SELECT 1 FROM amenities WHERE amenity_id = 1);
@@ -149,6 +181,54 @@ SELECT 6, 'Mountain View Lodge', 'Breathtaking views of the mountains, with cozy
        'bookings@mountainview.com', '+1-555-0600', NOW()
 WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 6);
 
+INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
+SELECT 7, 'Marina Bay Grand', 'Seafront luxury retreat with rooftop infinity pool and fine dining.', 7, 4.7, 6800,
+       'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1600&q=80',
+       'reservations@marinabaygrand.com', '+91-44-4100-7700', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 7);
+
+INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
+SELECT 8, 'Cyber Pearl Residency', 'Business-friendly stay near IT corridor with smart workspace suites.', 8, 4.4, 4200,
+       'https://images.unsplash.com/photo-1501117716987-c8e1ecb210f8?auto=format&fit=crop&w=1600&q=80',
+       'stay@cyberpearl.in', '+91-40-5200-8800', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 8);
+
+INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
+SELECT 9, 'Howrah Heritage Palace', 'Colonial-style boutique property blending heritage and modern comforts.', 9, 4.5, 5100,
+       'https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&w=1600&q=80',
+       'hello@howrahheritage.com', '+91-33-6100-9900', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 9);
+
+INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
+SELECT 10, 'Cochin Backwater Retreat', 'Tranquil waterfront resort with Ayurveda spa and sunset deck.', 10, 4.6, 5900,
+       'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1600&q=80',
+       'book@backwaterretreat.in', '+91-484-4700-6600', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 10);
+
+INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
+SELECT 11, 'Lakeview Royal Udaipur', 'Elegant palace-inspired suites overlooking serene lakes.', 11, 4.8, 7800,
+       'https://images.unsplash.com/photo-1578774204375-826dc5d996ed?auto=format&fit=crop&w=1600&q=80',
+       'royal@lakeviewudaipur.com', '+91-294-4300-2200', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 11);
+
+INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
+SELECT 12, 'Ganges Serenity Inn', 'Spiritual riverside experience with sunrise yoga and vegetarian cuisine.', 12, 4.3, 3400,
+       'https://images.unsplash.com/photo-1542314831-c6a4d14d8387?auto=format&fit=crop&w=1600&q=80',
+       'namaste@gangesserenity.in', '+91-542-3200-4400', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 12);
+
+INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
+SELECT 13, 'Deccan Urban Stay', 'Contemporary city hotel with coworking lounge and fitness studio.', 13, 4.2, 3900,
+       'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1600&q=80',
+       'contact@deccanurbanstay.com', '+91-20-4500-3000', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 13);
+
+INSERT INTO hotels (hotel_id, name, description, address_id, rating, base_price, image_url, contact_email, contact_phone, created_at)
+SELECT 14, 'Kashmir Snowcrest Resort', 'Scenic mountain resort with heated rooms and valley-view balconies.', 14, 4.7, 7200,
+       'https://images.unsplash.com/photo-1468824357306-a439d58ccb1c?auto=format&fit=crop&w=1600&q=80',
+       'stay@snowcrestkashmir.com', '+91-194-4100-5500', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM hotels WHERE hotel_id = 14);
+
 -- Rooms
 INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
 SELECT 101, 1, 1, '201A', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 101);
@@ -168,6 +248,23 @@ INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
 SELECT 502, 5, 8, 'B14', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 502);
 INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
 SELECT 601, 6, 9, 'C-4', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 601);
+
+INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
+SELECT 701, 7, 1, 'M-201', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 701);
+INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
+SELECT 801, 8, 4, 'IT-07', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 801);
+INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
+SELECT 901, 9, 5, 'H-310', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 901);
+INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
+SELECT 1001, 10, 3, 'BW-12', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 1001);
+INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
+SELECT 1101, 11, 5, 'L-501', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 1101);
+INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
+SELECT 1201, 12, 3, 'G-108', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 1201);
+INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
+SELECT 1301, 13, 4, 'D-220', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 1301);
+INSERT INTO rooms (room_id, hotel_id, category_id, room_number, availability)
+SELECT 1401, 14, 9, 'S-02', TRUE WHERE NOT EXISTS (SELECT 1 FROM rooms WHERE room_id = 1401);
 
 -- Hotel Amenities
 INSERT INTO hotel_amenities (hotel_id, amenity_id)
@@ -205,6 +302,54 @@ INSERT INTO hotel_amenities (hotel_id, amenity_id)
 SELECT 6, 1 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 6 AND amenity_id = 1);
 INSERT INTO hotel_amenities (hotel_id, amenity_id)
 SELECT 6, 4 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 6 AND amenity_id = 4);
+
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 7, 1 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 7 AND amenity_id = 1);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 7, 2 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 7 AND amenity_id = 2);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 7, 5 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 7 AND amenity_id = 5);
+
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 8, 1 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 8 AND amenity_id = 1);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 8, 3 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 8 AND amenity_id = 3);
+
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 9, 1 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 9 AND amenity_id = 1);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 9, 5 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 9 AND amenity_id = 5);
+
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 10, 1 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 10 AND amenity_id = 1);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 10, 4 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 10 AND amenity_id = 4);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 10, 6 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 10 AND amenity_id = 6);
+
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 11, 1 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 11 AND amenity_id = 1);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 11, 4 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 11 AND amenity_id = 4);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 11, 5 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 11 AND amenity_id = 5);
+
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 12, 1 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 12 AND amenity_id = 1);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 12, 6 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 12 AND amenity_id = 6);
+
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 13, 1 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 13 AND amenity_id = 1);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 13, 3 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 13 AND amenity_id = 3);
+
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 14, 1 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 14 AND amenity_id = 1);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 14, 2 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 14 AND amenity_id = 2);
+INSERT INTO hotel_amenities (hotel_id, amenity_id)
+SELECT 14, 4 WHERE NOT EXISTS (SELECT 1 FROM hotel_amenities WHERE hotel_id = 14 AND amenity_id = 4);
 
 -- Keep identity sequences ahead of inserted explicit IDs
 SELECT setval(pg_get_serial_sequence('addresses', 'address_id'), COALESCE((SELECT MAX(address_id) FROM addresses), 1), true);

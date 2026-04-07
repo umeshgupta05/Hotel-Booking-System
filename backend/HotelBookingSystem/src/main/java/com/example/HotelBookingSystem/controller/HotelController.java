@@ -21,10 +21,11 @@ public class HotelController {
 
     @GetMapping
     public ResponseEntity<List<Hotel>> getHotels(
+            @RequestParam(required = false) String q,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) Double rating,
             @RequestParam(required = false) Long amenityId) {
-        return ResponseEntity.ok(hotelService.searchHotels(city, rating, amenityId));
+        return ResponseEntity.ok(hotelService.searchHotels(q, city, rating, amenityId));
     }
 
     @GetMapping("/{id}")

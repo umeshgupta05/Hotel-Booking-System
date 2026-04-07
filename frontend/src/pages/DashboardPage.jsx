@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
@@ -36,15 +36,81 @@ const DashboardPage = () => {
     if (window.confirm("Are you sure you want to cancel this booking?")) {
       try {
         const updated = await api.cancelBooking(bookingId);
-        setBookings(
-          bookings.map((b) => (b.booking_id === bookingId ? updated : b)),
+        setBookings((prev) =>
+          prev.map((b) => (b.booking_id === bookingId ? updated : b)),
         );
         setMessage("Booking cancelled successfully.");
-      } catch (err) {
+      } catch {
         alert("Failed to cancel booking");
       }
     }
   };
+
+  const activeBookings = useMemo(
+    () =>
+      bookings.filter(
+        (booking) => (booking.status || "").toUpperCase() !== "CANCELLED",
+      ),
+    [bookings],
+  );
+
+  const cancelledBookings = useMemo(
+    () =>
+      bookings.filter(
+        (booking) => (booking.status || "").toUpperCase() === "CANCELLED",
+      ),
+    [bookings],
+  );
+
+  const renderBookingCard = (booking) => (
+    <div
+      key={booking.booking_id}
+      className="border border-slate-100 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:border-slate-300 transition-colors"
+    >
+      <div className="mb-4 md:mb-0 space-y-2">
+        <div className="flex items-center space-x-3">
+          <span
+            className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
+              booking.status === "CONFIRMED"
+                ? "bg-green-100 text-green-700"
+                : booking.status === "CANCELLED"
+                  ? "bg-red-100 text-red-700"
+                  : "bg-yellow-100 text-yellow-700"
+            }`}
+          >
+            {booking.status}
+          </span>
+          <span className="text-slate-400 text-sm">
+            ID: #{booking.booking_id}
+          </span>
+        </div>
+        <h4 className="font-bold text-lg text-slate-800">
+          Hotel Property #{booking.hotel_id}
+        </h4>
+        <div className="flex text-sm text-slate-600 space-x-4">
+          <span>
+            <span className="font-medium">In:</span> {booking.check_in}
+          </span>
+          <span>
+            <span className="font-medium">Out:</span> {booking.check_out}
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-row md:flex-col items-center md:items-end justify-between w-full md:w-auto mt-4 md:mt-0 gap-4">
+        <div className="text-xl font-bold text-brand-navy">
+          ₹{Number(booking.total_amount || 0).toLocaleString()}
+        </div>
+        {booking.status === "CONFIRMED" && (
+          <button
+            onClick={() => handleCancel(booking.booking_id)}
+            className="text-red-500 hover:text-red-700 text-sm font-medium"
+          >
+            Cancel Booking
+          </button>
+        )}
+      </div>
+    </div>
+  );
 
   if (!user) return null;
 
@@ -124,58 +190,50 @@ const DashboardPage = () => {
                   </Link>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {bookings.map((booking) => (
-                    <div
-                      key={booking.booking_id}
-                      className="border border-slate-100 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center hover:border-slate-300 transition-colors"
-                    >
-                      <div className="mb-4 md:mb-0 space-y-2">
-                        <div className="flex items-center space-x-3">
-                          <span
-                            className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
-                              booking.status === "CONFIRMED"
-                                ? "bg-green-100 text-green-700"
-                                : booking.status === "CANCELLED"
-                                  ? "bg-red-100 text-red-700"
-                                  : "bg-yellow-100 text-yellow-700"
-                            }`}
-                          >
-                            {booking.status}
-                          </span>
-                          <span className="text-slate-400 text-sm">
-                            ID: #{booking.booking_id}
-                          </span>
-                        </div>
-                        <h4 className="font-bold text-lg text-slate-800">
-                          Hotel Property #{booking.hotel_id}
-                        </h4>
-                        <div className="flex text-sm text-slate-600 space-x-4">
-                          <span>
-                            <span className="font-medium">In:</span>{" "}
-                            {booking.check_in}
-                          </span>
-                          <span>
-                            <span className="font-medium">Out:</span>{" "}
-                            {booking.check_out}
-                          </span>
-                        </div>
+                <div className="space-y-8">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-slate-900">
+                        Active Bookings
+                      </h3>
+                      <span className="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-700">
+                        {activeBookings.length}
+                      </span>
+                    </div>
+                    {activeBookings.length === 0 ? (
+                      <div className="p-5 rounded-xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500">
+                        No active bookings right now.
                       </div>
-                      <div className="flex flex-row md:flex-col items-center md:items-end justify-between w-full md:w-auto mt-4 md:mt-0 gap-4">
-                        <div className="text-xl font-bold text-brand-navy">
-                          ₹{booking.total_amount}
-                        </div>
-                        {booking.status === "CONFIRMED" && (
-                          <button
-                            onClick={() => handleCancel(booking.booking_id)}
-                            className="text-red-500 hover:text-red-700 text-sm font-medium"
-                          >
-                            Cancel Booking
-                          </button>
+                    ) : (
+                      <div className="space-y-4">
+                        {activeBookings.map((booking) =>
+                          renderBookingCard(booking),
                         )}
                       </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-slate-900">
+                        Cancelled Bookings
+                      </h3>
+                      <span className="px-3 py-1 text-xs font-semibold rounded-full bg-rose-100 text-rose-700">
+                        {cancelledBookings.length}
+                      </span>
                     </div>
-                  ))}
+                    {cancelledBookings.length === 0 ? (
+                      <div className="p-5 rounded-xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500">
+                        No cancelled bookings in your history.
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {cancelledBookings.map((booking) =>
+                          renderBookingCard(booking),
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

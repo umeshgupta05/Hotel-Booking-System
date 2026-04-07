@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table(name = "users")
@@ -24,4 +26,10 @@ public class User {
     private String password;
 
     private String role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "managed_hotel_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Hotel managedHotel;
 }

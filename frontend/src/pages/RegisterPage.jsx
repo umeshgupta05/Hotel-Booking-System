@@ -1,31 +1,79 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { api } from '../services/api';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "../services/api";
+
+const MIN_PASSWORD_LENGTH = 8;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'USER'
+    name: "",
+    email: "",
+    password: "",
+    role: "ROLE_USER",
+    hotelId: "",
   });
-  const [error, setError] = useState('');
+  const [hotels, setHotels] = useState([]);
+  const [loadingHotels, setLoadingHotels] = useState(false);
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    const fetchHotels = async () => {
+      setLoadingHotels(true);
+      try {
+        const data = await api.getHotels();
+        setHotels(data);
+      } catch {
+        setHotels([]);
+      } finally {
+        setLoadingHotels(false);
+      }
+    };
+
+    fetchHotels();
+  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
+
+    const normalizedEmail = formData.email.trim();
+    if (!EMAIL_REGEX.test(normalizedEmail)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (formData.password.length < MIN_PASSWORD_LENGTH) {
+      setError(
+        `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
+      );
+      return;
+    }
+
+    if (formData.role === "ROLE_ADMIN" && !formData.hotelId) {
+      setError("Please select a hotel to manage for admin signup.");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await api.register(formData);
-      navigate('/login', { state: { message: "Registration successful. Please log in." } });
+      await api.register({
+        ...formData,
+        email: normalizedEmail,
+        hotelId:
+          formData.role === "ROLE_ADMIN" ? Number(formData.hotelId) : null,
+      });
+      navigate("/login", {
+        state: { message: "Registration successful. Please log in." },
+      });
     } catch (err) {
-      setError(err.message || 'Registration failed.');
+      setError(err.message || "Registration failed.");
     } finally {
       setIsLoading(false);
     }
@@ -33,7 +81,6 @@ const RegisterPage = () => {
 
   return (
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center relative overflow-hidden bg-[#09090b]">
-      
       {/* Liquid Geometry & Ambient Pastel Glow Background */}
       <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-rose-300/20 blur-[130px] mix-blend-screen pointer-events-none"></div>
       <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-orange-300/10 blur-[150px] mix-blend-screen pointer-events-none"></div>
@@ -41,8 +88,12 @@ const RegisterPage = () => {
 
       <div className="w-full max-w-md p-10 m-4 relative z-10 rounded-3xl bg-white/[0.04] border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] backdrop-blur-2xl">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 to-orange-200 mb-2">Create Account</h2>
-          <p className="text-slate-400 text-sm">Join LuxeStay and book premium hotels</p>
+          <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 to-orange-200 mb-2">
+            Create Account
+          </h2>
+          <p className="text-slate-400 text-sm">
+            Join LuxeStay and book premium hotels
+          </p>
         </div>
 
         {error && (
@@ -52,53 +103,136 @@ const RegisterPage = () => {
         )}
 
         <form onSubmit={handleRegister} className="space-y-5">
+          <div className="grid grid-cols-2 gap-2 p-1 bg-black/30 rounded-xl border border-white/10">
+            <button
+              type="button"
+              onClick={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  role: "ROLE_USER",
+                  hotelId: "",
+                }))
+              }
+              className={`py-2 rounded-lg text-sm font-medium transition-colors ${
+                formData.role === "ROLE_USER"
+                  ? "bg-white/20 text-white"
+                  : "text-slate-300 hover:text-white"
+              }`}
+            >
+              User Signup
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setFormData((prev) => ({ ...prev, role: "ROLE_ADMIN" }))
+              }
+              className={`py-2 rounded-lg text-sm font-medium transition-colors ${
+                formData.role === "ROLE_ADMIN"
+                  ? "bg-white/20 text-white"
+                  : "text-slate-300 hover:text-white"
+              }`}
+            >
+              Admin Signup
+            </button>
+          </div>
+
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider ml-1">Full Name</label>
-            <input 
+            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider ml-1">
+              Full Name
+            </label>
+            <input
               name="name"
-              type="text" 
+              type="text"
               value={formData.name}
               onChange={handleChange}
               className="w-full px-5 py-3.5 bg-black/30 border border-white/5 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-300/40 focus:border-rose-300/40 transition-all shadow-inner"
               placeholder="John Doe"
-              required 
+              required
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider ml-1">Email Address</label>
-            <input 
+            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider ml-1">
+              Email Address
+            </label>
+            <input
               name="email"
-              type="email" 
+              type="email"
               value={formData.email}
               onChange={handleChange}
               className="w-full px-5 py-3.5 bg-black/30 border border-white/5 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-300/40 focus:border-rose-300/40 transition-all shadow-inner"
               placeholder="you@example.com"
-              required 
+              autoComplete="email"
+              required
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider ml-1">Password</label>
-            <input 
+            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider ml-1">
+              Password
+            </label>
+            <input
               name="password"
-              type="password" 
+              type="password"
               value={formData.password}
               onChange={handleChange}
               className="w-full px-5 py-3.5 bg-black/30 border border-white/5 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-300/40 focus:border-rose-300/40 transition-all shadow-inner"
               placeholder="••••••••"
-              required 
+              minLength={MIN_PASSWORD_LENGTH}
+              autoComplete="new-password"
+              required
             />
+            <p className="text-xs text-slate-400 ml-1">
+              Use at least {MIN_PASSWORD_LENGTH} characters.
+            </p>
           </div>
-          <button 
-            type="submit" 
+
+          {formData.role === "ROLE_ADMIN" && (
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider ml-1">
+                Hotel To Manage
+              </label>
+              <select
+                name="hotelId"
+                value={formData.hotelId}
+                onChange={handleChange}
+                className="w-full px-5 py-3.5 bg-black/30 border border-white/5 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-rose-300/40 focus:border-rose-300/40 transition-all shadow-inner"
+                required
+              >
+                <option value="" className="text-slate-900">
+                  {loadingHotels ? "Loading hotels..." : "Select a hotel"}
+                </option>
+                {hotels.map((hotel) => {
+                  const hotelId = hotel.hotelId || hotel.hotel_id;
+                  return (
+                    <option
+                      key={hotelId}
+                      value={hotelId}
+                      className="text-slate-900"
+                    >
+                      {hotel.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          )}
+
+          <button
+            type="submit"
             disabled={isLoading}
             className="w-full py-3.5 px-4 bg-gradient-to-r from-rose-400/80 to-orange-400/80 hover:from-rose-400 hover:to-orange-400 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(251,146,60,0.2)] disabled:opacity-50 disabled:cursor-not-allowed mt-6"
           >
-            {isLoading ? 'Creating Account...' : 'Sign Up'}
+            {isLoading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 
         <div className="mt-8 text-center text-sm text-slate-400">
-          Already have an account? <Link to="/login" className="text-rose-300 hover:text-rose-200 font-semibold transition-colors ml-1">Log in here</Link>
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-rose-300 hover:text-rose-200 font-semibold transition-colors ml-1"
+          >
+            Log in here
+          </Link>
         </div>
       </div>
     </div>

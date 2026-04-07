@@ -3,6 +3,23 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 
 const toIsoDate = (date) => date.toISOString().slice(0, 10);
+const RAZORPAY_KEY_ID =
+  import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_SaXL0fheGFoGLq";
+
+const loadRazorpayScript = () =>
+  new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
 
 const BookingPage = () => {
   const location = useLocation();
@@ -18,6 +35,7 @@ const BookingPage = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("RAZORPAY");
 
   useEffect(() => {
     const today = new Date();
@@ -63,6 +81,85 @@ const BookingPage = () => {
 
   const total = roomPrice * nights;
 
+  const launchRazorpayCheckout = async ({ bookingId }) => {
+    const scriptLoaded = await loadRazorpayScript();
+    if (!scriptLoaded) {
+      throw new Error(
+        "Unable to load Razorpay checkout. Please check your connection and try again.",
+      );
+    }
+
+    const order = await api.createRazorpayOrder({
+      bookingId,
+      amount: Math.round(total),
+      currency: "INR",
+    });
+
+    return new Promise((resolve, reject) => {
+      const storedUserRaw = localStorage.getItem("hotel_user");
+      let storedUser = null;
+      if (storedUserRaw) {
+        try {
+          storedUser = JSON.parse(storedUserRaw);
+        } catch {
+          storedUser = null;
+        }
+      }
+
+      const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency || "INR",
+        name: "LuxeStay",
+        description: `Booking at ${hotel.name}`,
+        order_id: order.orderId,
+        handler: async (response) => {
+          try {
+            await api.verifyPaymentSignature({
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+              bookingId,
+            });
+            resolve();
+          } catch (verifyError) {
+            reject(verifyError);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            reject(
+              new Error(
+                "Payment was cancelled. Your booking is still created as pending.",
+              ),
+            );
+          },
+        },
+        theme: {
+          color: "#2563eb",
+        },
+      };
+
+      if (storedUser) {
+        options.prefill = {
+          name: storedUser.name || "",
+          email: storedUser.email || "",
+        };
+      }
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.on("payment.failed", (response) => {
+        reject(
+          new Error(
+            response?.error?.description ||
+              "Payment failed. Please try again with another method.",
+          ),
+        );
+      });
+      razorpay.open();
+    });
+  };
+
   const handleConfirm = async (e) => {
     e.preventDefault();
     setError("");
@@ -86,15 +183,26 @@ const BookingPage = () => {
         checkOut,
       });
 
-      await api.processPayment({
-        bookingId: booking.booking_id ?? booking.bookingId,
-        amount: total,
-        method: "PAY_AT_HOTEL",
-      });
+      const bookingId = booking.booking_id ?? booking.bookingId;
+
+      if (paymentMethod === "RAZORPAY") {
+        await launchRazorpayCheckout({ bookingId });
+      } else {
+        await api.processPayment({
+          bookingId,
+          amount: total,
+          method: "PAY_AT_HOTEL",
+        });
+      }
 
       navigate("/dashboard", {
         replace: true,
-        state: { message: "Booking and payment recorded successfully." },
+        state: {
+          message:
+            paymentMethod === "RAZORPAY"
+              ? "Booking confirmed and payment completed successfully."
+              : "Booking confirmed. Payment marked as Pay at Hotel.",
+        },
       });
     } catch (err) {
       setError(err.message || "Failed to confirm booking.");
@@ -173,16 +281,30 @@ const BookingPage = () => {
                 <h3 className="text-lg font-bold text-slate-800 mb-4">
                   Payment Method
                 </h3>
-                <div className="flex items-center p-4 border border-brand-blue bg-blue-50/50 rounded-xl">
-                  <input
-                    type="radio"
-                    checked
-                    readOnly
-                    className="text-brand-blue focus:ring-brand-blue"
-                  />
-                  <span className="ml-3 font-medium text-brand-navy">
-                    Pay at Hotel
-                  </span>
+                <div className="space-y-3">
+                  <label className="flex items-center p-4 border border-brand-blue bg-blue-50/50 rounded-xl cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={paymentMethod === "RAZORPAY"}
+                      onChange={() => setPaymentMethod("RAZORPAY")}
+                      className="text-brand-blue focus:ring-brand-blue"
+                    />
+                    <span className="ml-3 font-medium text-brand-navy">
+                      Pay now with Razorpay (UPI / Cards / Netbanking)
+                    </span>
+                  </label>
+
+                  <label className="flex items-center p-4 border border-slate-200 bg-slate-50/70 rounded-xl cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={paymentMethod === "PAY_AT_HOTEL"}
+                      onChange={() => setPaymentMethod("PAY_AT_HOTEL")}
+                      className="text-brand-blue focus:ring-brand-blue"
+                    />
+                    <span className="ml-3 font-medium text-slate-700">
+                      Pay at Hotel
+                    </span>
+                  </label>
                 </div>
               </div>
 
@@ -193,7 +315,9 @@ const BookingPage = () => {
               >
                 {processing
                   ? "Processing..."
-                  : `Confirm Booking - ₹${total.toLocaleString()}`}
+                  : paymentMethod === "RAZORPAY"
+                    ? `Pay ₹${total.toLocaleString()} with Razorpay`
+                    : `Confirm Booking - ₹${total.toLocaleString()}`}
               </button>
             </form>
           </div>
@@ -229,6 +353,12 @@ const BookingPage = () => {
                 <div className="flex justify-between">
                   <span className="text-slate-600">Nights</span>
                   <span className="font-medium">{nights}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-600">Payment</span>
+                  <span className="font-medium">
+                    {paymentMethod === "RAZORPAY" ? "Razorpay" : "Pay at Hotel"}
+                  </span>
                 </div>
               </div>
 

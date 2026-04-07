@@ -9,6 +9,8 @@ const normalizeUser = (user) => ({
   name: user?.name,
   email: user?.email,
   role: user?.role,
+  hotel_id: user?.hotel_id ?? user?.hotelId,
+  hotelId: user?.hotelId ?? user?.hotel_id,
 });
 
 const normalizeHotel = (hotel) => ({
@@ -27,6 +29,9 @@ const normalizeHotel = (hotel) => ({
   contactPhone: hotel?.contactPhone ?? hotel?.contact_phone,
   created_at: hotel?.created_at ?? hotel?.createdAt,
   createdAt: hotel?.createdAt ?? hotel?.created_at,
+  amenities: Array.isArray(hotel?.amenities)
+    ? hotel.amenities.map(normalizeAmenity)
+    : [],
 });
 
 const normalizeRoom = (room, hotelId) => ({
@@ -66,6 +71,21 @@ const normalizeBooking = (booking) => ({
   total_amount: booking?.total_amount ?? booking?.totalAmount,
   totalAmount: booking?.totalAmount ?? booking?.total_amount,
   status: booking?.status,
+});
+
+const normalizeAmenity = (amenity) => ({
+  amenity_id: amenity?.amenity_id ?? amenity?.amenityId,
+  amenityId: amenity?.amenityId ?? amenity?.amenity_id,
+  name: amenity?.name,
+});
+
+const normalizeRoomCategory = (category) => ({
+  category_id: category?.category_id ?? category?.categoryId,
+  categoryId: category?.categoryId ?? category?.category_id,
+  name: category?.name,
+  base_price: category?.base_price ?? category?.basePrice,
+  basePrice: category?.basePrice ?? category?.base_price,
+  capacity: category?.capacity,
 });
 
 const getAuthHeaders = () => {
@@ -130,6 +150,7 @@ export const api = {
         name: data.name,
         email: data.email,
         role: data.role,
+        hotelId: data.hotelId,
       }),
     };
   },
@@ -142,15 +163,155 @@ export const api = {
         name: userData.name,
         email: userData.email,
         password: userData.password,
+        role: userData.role,
+        hotelId: userData.hotelId,
       }),
     });
 
     return await handleResponse(response);
   },
 
+  forgotPassword: async (email) => {
+    const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    return await handleResponse(response);
+  },
+
+  resetPassword: async ({ email, otp, newPassword }) => {
+    const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp, newPassword }),
+    });
+
+    return await handleResponse(response);
+  },
+
+  // Admin hotel management
+  getAdminHotel: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/hotel`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await handleResponse(response);
+    return normalizeHotel(data);
+  },
+
+  updateAdminHotel: async (hotelData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/hotel`, {
+      method: "PUT",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(hotelData),
+    });
+    const data = await handleResponse(response);
+    return normalizeHotel(data);
+  },
+
+  getAdminHotelRooms: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/hotel/rooms`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await handleResponse(response);
+    return Array.isArray(data) ? data.map((room) => normalizeRoom(room)) : [];
+  },
+
+  createAdminRoom: async (roomData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/hotel/rooms`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        roomNumber: roomData.roomNumber,
+        categoryId: roomData.categoryId,
+        availability: roomData.availability,
+      }),
+    });
+
+    const data = await handleResponse(response);
+    return normalizeRoom(data);
+  },
+
+  updateAdminRoom: async (roomId, roomData) => {
+    const response = await fetch(
+      `${API_BASE_URL}/admin/hotel/rooms/${roomId}`,
+      {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          roomNumber: roomData.roomNumber,
+          categoryId: roomData.categoryId,
+          availability: roomData.availability,
+        }),
+      },
+    );
+
+    const data = await handleResponse(response);
+    return normalizeRoom(data);
+  },
+
+  deleteAdminRoom: async (roomId) => {
+    const response = await fetch(
+      `${API_BASE_URL}/admin/hotel/rooms/${roomId}`,
+      {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      },
+    );
+    return await handleResponse(response);
+  },
+
+  getAdminAmenities: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/amenities`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await handleResponse(response);
+    return Array.isArray(data) ? data.map(normalizeAmenity) : [];
+  },
+
+  updateAdminHotelAmenities: async (amenityIds) => {
+    const response = await fetch(`${API_BASE_URL}/admin/hotel/amenities`, {
+      method: "PUT",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ amenityIds }),
+    });
+    const data = await handleResponse(response);
+    return normalizeHotel(data);
+  },
+
+  getAdminRoomCategories: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/room-categories`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await handleResponse(response);
+    return Array.isArray(data) ? data.map(normalizeRoomCategory) : [];
+  },
+
   // Hotels
-  getHotels: async () => {
-    const response = await fetch(`${API_BASE_URL}/hotels`, {
+  getHotels: async (filters = {}) => {
+    const params = new URLSearchParams();
+
+    if (filters.q?.trim()) {
+      params.set("q", filters.q.trim());
+    }
+
+    if (filters.city?.trim()) {
+      params.set("city", filters.city.trim());
+    }
+    if (typeof filters.rating === "number") {
+      params.set("rating", String(filters.rating));
+    }
+    if (filters.amenityId !== undefined && filters.amenityId !== null) {
+      params.set("amenityId", String(filters.amenityId));
+    }
+
+    const query = params.toString();
+    const endpoint = query
+      ? `${API_BASE_URL}/hotels?${query}`
+      : `${API_BASE_URL}/hotels`;
+
+    const response = await fetch(endpoint, {
       headers: getAuthHeaders(),
     });
     const data = await handleResponse(response);
@@ -225,7 +386,7 @@ export const api = {
   },
 
   processPayment: async (paymentData) => {
-    const response = await fetch(`${API_BASE_URL}/payments`, {
+    const response = await fetch(`${API_BASE_URL}/payments/process`, {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify({

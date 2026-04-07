@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -37,7 +38,8 @@ public class PaymentService {
 
     @Transactional
     public Payment processPayment(PaymentRequest request) {
-        Optional<Booking> bookingOpt = bookingRepository.findById(request.getBookingId());
+        Long bookingId = Objects.requireNonNull(request.getBookingId(), "bookingId is required");
+        Optional<Booking> bookingOpt = bookingRepository.findById(bookingId);
         if (bookingOpt.isEmpty()) {
             throw new RuntimeException("Booking not found");
         }
@@ -88,7 +90,8 @@ public class PaymentService {
             }
             
             // Signature applies. Update the DB booking to confirmed.
-            Optional<Booking> bookingOpt = bookingRepository.findById(request.getBookingId());
+            Long bookingId = Objects.requireNonNull(request.getBookingId(), "bookingId is required");
+            Optional<Booking> bookingOpt = bookingRepository.findById(bookingId);
             if (bookingOpt.isEmpty()) {
                 throw new RuntimeException("Booking not found to confirm payment");
             }
