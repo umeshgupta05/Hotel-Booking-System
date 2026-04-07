@@ -1,215 +1,222 @@
-const MOCK_HOTELS = [
-  {
-    hotel_id: 1,
-    name: "Luxury Plaza Hotel",
-    description: "Experience 5-star comfort right in the heart of the city.",
-    rating: 4.8,
-    base_price: 4500,
-    contact_email: "contact@luxuryplaza.com",
-    contact_phone: "+1-555-0100",
-    created_at: new Date().toISOString()
-  },
-  {
-    hotel_id: 2,
-    name: "Seaside Resort & Spa",
-    description: "Relaxing oceanfront property with premium spa amenities.",
-    rating: 4.6,
-    base_price: 3000,
-    contact_email: "hello@seasideresort.com",
-    contact_phone: "+1-555-0200",
-    created_at: new Date().toISOString()
-  },
-  {
-    hotel_id: 3,
-    name: "Downtown Business Suites",
-    description: "Perfect for the modern core business traveler.",
-    rating: 4.2,
-    base_price: 2500,
-    contact_email: "info@downtownsuites.com",
-    contact_phone: "+1-555-0300",
-    created_at: new Date().toISOString()
-  },
-  {
-    hotel_id: 4,
-    name: "The Royal Orchard Inn",
-    description: "Heritage property offering a blend of traditional culture and modern luxury.",
-    rating: 4.9,
-    base_price: 8500,
-    contact_email: "stay@royalorchard.com",
-    contact_phone: "+1-555-0400",
-    created_at: new Date().toISOString()
-  },
-  {
-    hotel_id: 5,
-    name: "Skyline Budget Stays",
-    description: "Affordable, clean, and highly accessible locations for backpackers.",
-    rating: 3.8,
-    base_price: 900,
-    contact_email: "contact@skylinebudget.com",
-    contact_phone: "+1-555-0500",
-    created_at: new Date().toISOString()
-  },
-  {
-    hotel_id: 6,
-    name: "Mountain View Lodge",
-    description: "Breathtaking views of the mountains, with cozy fireplaces in every room.",
-    rating: 4.5,
-    base_price: 5200,
-    contact_email: "bookings@mountainview.com",
-    contact_phone: "+1-555-0600",
-    created_at: new Date().toISOString()
-  }
-];
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8086/api";
 
-const MOCK_ROOMS = {
-  1: [
-    { room_id: 101, hotel_id: 1, category_id: 1, category_name: "Deluxe King", base_price: 4500, capacity: 2, room_number: "201A", availability: true },
-    { room_id: 102, hotel_id: 1, category_id: 2, category_name: "Presidential Suite", base_price: 15000, capacity: 4, room_number: "PH-1", availability: true }
-  ],
-  2: [
-    { room_id: 201, hotel_id: 2, category_id: 3, category_name: "Ocean View Standard", base_price: 3000, capacity: 2, room_number: "101B", availability: true }
-  ],
-  3: [
-    { room_id: 301, hotel_id: 3, category_id: 4, category_name: "Business Studio", base_price: 2500, capacity: 1, room_number: "505C", availability: true }
-  ],
-  4: [
-    { room_id: 401, hotel_id: 4, category_id: 5, category_name: "Heritage Suite", base_price: 8500, capacity: 3, room_number: "110", availability: true },
-    { room_id: 402, hotel_id: 4, category_id: 6, category_name: "Royal Villa", base_price: 22000, capacity: 6, room_number: "V-1", availability: false }
-  ],
-  5: [
-    { room_id: 501, hotel_id: 5, category_id: 7, category_name: "Compact Single", base_price: 900, capacity: 1, room_number: "B12", availability: true },
-    { room_id: 502, hotel_id: 5, category_id: 8, category_name: "Double Bunk Room", base_price: 1500, capacity: 4, room_number: "B14", availability: true }
-  ],
-  6: [
-    { room_id: 601, hotel_id: 6, category_id: 9, category_name: "Alpine Cabana", base_price: 5200, capacity: 2, room_number: "C-4", availability: true }
-  ]
-};
+const toIsoDate = (date) => date.toISOString().slice(0, 10);
 
-const MOCK_BOOKINGS = [];
+const normalizeUser = (user) => ({
+  user_id: user?.user_id ?? user?.id,
+  id: user?.id ?? user?.user_id,
+  name: user?.name,
+  email: user?.email,
+  role: user?.role,
+});
 
-// API configuration
-const API_BASE_URL = 'http://localhost:8080/api';
+const normalizeHotel = (hotel) => ({
+  hotel_id: hotel?.hotel_id ?? hotel?.hotelId ?? hotel?.id,
+  hotelId: hotel?.hotelId ?? hotel?.hotel_id ?? hotel?.id,
+  name: hotel?.name,
+  description: hotel?.description,
+  rating: hotel?.rating,
+  image_url: hotel?.image_url ?? hotel?.imageUrl,
+  imageUrl: hotel?.imageUrl ?? hotel?.image_url,
+  base_price: hotel?.base_price ?? hotel?.basePrice ?? hotel?.price,
+  basePrice: hotel?.basePrice ?? hotel?.base_price ?? hotel?.price,
+  contact_email: hotel?.contact_email ?? hotel?.contactEmail,
+  contactEmail: hotel?.contactEmail ?? hotel?.contact_email,
+  contact_phone: hotel?.contact_phone ?? hotel?.contactPhone,
+  contactPhone: hotel?.contactPhone ?? hotel?.contact_phone,
+  created_at: hotel?.created_at ?? hotel?.createdAt,
+  createdAt: hotel?.createdAt ?? hotel?.created_at,
+});
+
+const normalizeRoom = (room, hotelId) => ({
+  room_id: room?.room_id ?? room?.roomId,
+  roomId: room?.roomId ?? room?.room_id,
+  hotel_id: room?.hotel_id ?? room?.hotelId ?? hotelId,
+  hotelId: room?.hotelId ?? room?.hotel_id ?? hotelId,
+  category_id:
+    room?.category_id ?? room?.categoryId ?? room?.roomCategory?.categoryId,
+  categoryId:
+    room?.categoryId ?? room?.category_id ?? room?.roomCategory?.categoryId,
+  category_name:
+    room?.category_name ?? room?.categoryName ?? room?.roomCategory?.name,
+  categoryName:
+    room?.categoryName ?? room?.category_name ?? room?.roomCategory?.name,
+  base_price:
+    room?.base_price ?? room?.basePrice ?? room?.roomCategory?.basePrice,
+  basePrice:
+    room?.basePrice ?? room?.base_price ?? room?.roomCategory?.basePrice,
+  capacity: room?.capacity ?? room?.roomCategory?.capacity,
+  room_number: room?.room_number ?? room?.roomNumber,
+  roomNumber: room?.roomNumber ?? room?.room_number,
+  availability: room?.availability,
+});
+
+const normalizeBooking = (booking) => ({
+  booking_id: booking?.booking_id ?? booking?.bookingId,
+  bookingId: booking?.bookingId ?? booking?.booking_id,
+  hotel_id: booking?.hotel_id ?? booking?.hotelId ?? booking?.hotel?.hotelId,
+  hotelId: booking?.hotelId ?? booking?.hotel_id ?? booking?.hotel?.hotelId,
+  room_id: booking?.room_id ?? booking?.roomId ?? booking?.room?.roomId,
+  roomId: booking?.roomId ?? booking?.room_id ?? booking?.room?.roomId,
+  check_in: booking?.check_in ?? booking?.checkIn,
+  checkIn: booking?.checkIn ?? booking?.check_in,
+  check_out: booking?.check_out ?? booking?.checkOut,
+  checkOut: booking?.checkOut ?? booking?.check_out,
+  total_amount: booking?.total_amount ?? booking?.totalAmount,
+  totalAmount: booking?.totalAmount ?? booking?.total_amount,
+  status: booking?.status,
+});
 
 const getAuthHeaders = () => {
-  const token = localStorage.getItem('hotel_token');
+  const token = localStorage.getItem("hotel_token");
   return {
-    'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 };
 
 const handleResponse = async (response) => {
   if (!response.ok) {
     const errorMsg = await response.text();
-    throw new Error(errorMsg || 'API Request Failed');
+    throw new Error(errorMsg || "API Request Failed");
   }
+
+  if (response.status === 204) {
+    return null;
+  }
+
   return response.json();
 };
 
 export const api = {
   // Auth
   login: async (credentials) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials)
-      });
-      return await handleResponse(response);
-    } catch (e) {
-      console.warn("Backend auth failed, using mock data.", e);
-      if (credentials.email && credentials.password) {
-        return { 
-          token: "mock-jwt-token-12345", 
-          user: { user_id: 1, name: "Admin User", email: credentials.email, role: "USER" } 
-        };
-      }
-      throw new Error("Invalid credentials");
-    }
+    const response = await fetch(`${API_BASE_URL}/auth/signin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: credentials.email,
+        password: credentials.password,
+      }),
+    });
+
+    const data = await handleResponse(response);
+    return {
+      token: data.token,
+      user: normalizeUser({
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        role: data.role,
+      }),
+    };
   },
-  
+
   register: async (userData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
-      });
-      return await handleResponse(response);
-    } catch (e) {
-      console.warn("Backend mock register.", e);
-      return { message: "User registered successfully" };
-    }
+    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+      }),
+    });
+
+    return await handleResponse(response);
   },
 
   // Hotels
   getHotels: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/hotels`, { headers: getAuthHeaders() });
-      return await handleResponse(response);
-    } catch (e) {
-      return MOCK_HOTELS;
-    }
+    const response = await fetch(`${API_BASE_URL}/hotels`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await handleResponse(response);
+    return Array.isArray(data) ? data.map(normalizeHotel) : [];
   },
+
   getHotelById: async (id) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/hotels/${id}`, { headers: getAuthHeaders() });
-      return await handleResponse(response);
-    } catch (e) {
-      const hotel = MOCK_HOTELS.find(h => h.hotel_id === parseInt(id));
-      if (!hotel) throw new Error("Hotel not found");
-      return hotel;
-    }
+    const response = await fetch(`${API_BASE_URL}/hotels/${id}`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await handleResponse(response);
+    return normalizeHotel(data);
   },
-  
+
   // Rooms
-  getRoomsByHotel: async (hotelId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/hotels/${hotelId}/rooms`, { headers: getAuthHeaders() });
-      return await handleResponse(response);
-    } catch (e) {
-      return MOCK_ROOMS[hotelId] || [];
-    }
+  getRoomsByHotel: async (hotelId, checkIn, checkOut) => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const inDate = checkIn || toIsoDate(today);
+    const outDate = checkOut || toIsoDate(tomorrow);
+    const params = new URLSearchParams({ checkIn: inDate, checkOut: outDate });
+
+    const response = await fetch(
+      `${API_BASE_URL}/hotels/${hotelId}/rooms?${params.toString()}`,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
+
+    const data = await handleResponse(response);
+    return Array.isArray(data)
+      ? data.map((room) => normalizeRoom(room, Number(hotelId)))
+      : [];
   },
 
   // Bookings
   createBooking: async (bookingData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/bookings`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(bookingData)
-      });
-      return await handleResponse(response);
-    } catch (e) {
-      console.warn("Mock booking created");
-      const newBooking = { booking_id: Date.now(), ...bookingData, status: "CONFIRMED" };
-      MOCK_BOOKINGS.push(newBooking);
-      return newBooking;
-    }
+    const response = await fetch(`${API_BASE_URL}/bookings`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        hotelId: bookingData.hotelId ?? bookingData.hotel_id,
+        roomId: bookingData.roomId ?? bookingData.room_id,
+        checkIn: bookingData.checkIn ?? bookingData.check_in,
+        checkOut: bookingData.checkOut ?? bookingData.check_out,
+      }),
+    });
+
+    const data = await handleResponse(response);
+    return normalizeBooking(data);
   },
+
+  processPayment: async (paymentData) => {
+    const response = await fetch(`${API_BASE_URL}/payments`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        bookingId: paymentData.bookingId ?? paymentData.booking_id,
+        amount: paymentData.amount ?? paymentData.total_amount,
+        method:
+          paymentData.method ?? paymentData.payment_method ?? "PAY_AT_HOTEL",
+      }),
+    });
+
+    return await handleResponse(response);
+  },
+
   getUserBookings: async (userId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/bookings/user/${userId}`, { headers: getAuthHeaders() });
-      return await handleResponse(response);
-    } catch (e) {
-      return MOCK_BOOKINGS.filter(b => b.user_id === userId);
-    }
+    const response = await fetch(`${API_BASE_URL}/bookings/my-history`, {
+      headers: getAuthHeaders(),
+    });
+    const data = await handleResponse(response);
+    return Array.isArray(data) ? data.map(normalizeBooking) : [];
   },
+
   cancelBooking: async (bookingId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/bookings/${bookingId}/cancel`, {
-        method: 'PUT',
-        headers: getAuthHeaders()
-      });
-      return await handleResponse(response);
-    } catch (e) {
-      const idx = MOCK_BOOKINGS.findIndex(b => b.booking_id === bookingId);
-      if (idx !== -1) {
-        MOCK_BOOKINGS[idx].status = "CANCELLED";
-        return MOCK_BOOKINGS[idx];
-      }
-      throw new Error("Booking not found");
-    }
-  }
+    const response = await fetch(
+      `${API_BASE_URL}/bookings/${bookingId}/cancel`,
+      {
+        method: "PUT",
+        headers: getAuthHeaders(),
+      },
+    );
+
+    const data = await handleResponse(response);
+    return normalizeBooking(data);
+  },
 };

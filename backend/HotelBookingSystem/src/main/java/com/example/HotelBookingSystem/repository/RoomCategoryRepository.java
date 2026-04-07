@@ -1,12 +1,12 @@
 package com.example.HotelBookingSystem.repository;
 
-import com.example.HotelBookingSystem.entity.Payment;
+import com.example.HotelBookingSystem.entity.RoomCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, Long> {
-	Optional<Payment> findByBookingBookingId(Long bookingId);
+public interface RoomCategoryRepository extends JpaRepository<RoomCategory, Long> {
+	Optional<RoomCategory> findByName(String name);
 }

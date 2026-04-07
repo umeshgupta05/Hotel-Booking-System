@@ -2,14 +2,10 @@ spring:
   application:
     name: HotelBookingSystem
   datasource:
-    url: jdbc:h2:file:./data/hotel_db;AUTO_SERVER=TRUE
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: jdbc:postgresql://localhost:5432/hotel_booking_system
+    username: postgres
+    password: "767089"
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -51,4 +47,4 @@ springdoc:
     path: /swagger-ui.html
 
 server:
-  port: 8085
+  port: 8086

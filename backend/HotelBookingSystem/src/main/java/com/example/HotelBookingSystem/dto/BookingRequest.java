@@ -13,8 +13,10 @@ public class BookingRequest {
     private Long roomId;
 
     @NotNull
+    @com.fasterxml.jackson.annotation.JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate checkIn;
 
     @NotNull
+    @com.fasterxml.jackson.annotation.JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate checkOut;
 }

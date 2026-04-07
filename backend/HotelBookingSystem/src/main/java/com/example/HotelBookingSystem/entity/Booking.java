@@ -28,20 +28,22 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", nullable = false)
-    @JsonIgnore
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Hotel hotel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
-    @JsonIgnore
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Room room;
 
+    @com.fasterxml.jackson.annotation.JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate checkIn;
     // Addition based on user prompt requirements
+    @com.fasterxml.jackson.annotation.JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate checkOut;
 
     private Double totalAmount;

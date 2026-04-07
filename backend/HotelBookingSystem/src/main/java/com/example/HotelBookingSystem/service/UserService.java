@@ -6,9 +6,12 @@ import com.example.HotelBookingSystem.repository.NotificationRepository;
 import com.example.HotelBookingSystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class UserService {
     @Autowired
     private UserRepository userRepository;

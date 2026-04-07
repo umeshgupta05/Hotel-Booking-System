@@ -11,10 +11,13 @@ import com.example.HotelBookingSystem.repository.RoomRepository;
 import com.example.HotelBookingSystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
@@ -25,6 +28,7 @@ public class BookingService {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Transactional
     public Booking createBooking(Long userId, BookingRequest request) {
         User user = userRepository.findById(userId).orElseThrow();
         Hotel hotel = hotelRepository.findById(request.getHotelId()).orElseThrow();
@@ -59,6 +63,7 @@ public class BookingService {
         return bookingRepository.findById(bookingId).orElseThrow();
     }
 
+    @Transactional
     public Booking cancelBooking(Long bookingId) {
         Booking booking = getBooking(bookingId);
         booking.setStatus("CANCELLED");

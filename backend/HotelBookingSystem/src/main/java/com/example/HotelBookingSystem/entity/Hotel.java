@@ -32,6 +32,8 @@ public class Hotel {
     private Address address;
 
     private Double rating;
+    private Double basePrice;
+    private String imageUrl;
     private String contactEmail;
     private String contactPhone;
     

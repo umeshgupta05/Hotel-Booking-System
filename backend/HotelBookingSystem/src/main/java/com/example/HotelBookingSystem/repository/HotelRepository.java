@@ -11,7 +11,7 @@ import java.util.List;
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
     // Basic search filtering logic
     @Query("SELECT DISTINCT h FROM Hotel h JOIN h.address a LEFT JOIN h.amenities am " +
-           "WHERE (:city IS NULL OR LOWER(a.city) LIKE LOWER(CONCAT('%', :city, '%'))) " +
+           "WHERE (:city = '' OR LOWER(a.city) LIKE LOWER(CONCAT('%', :city, '%'))) " +
            "AND (:rating IS NULL OR h.rating >= :rating) " +
            "AND (:amenityId IS NULL OR am.amenityId = :amenityId)")
     List<Hotel> searchHotels(@Param("city") String city, 

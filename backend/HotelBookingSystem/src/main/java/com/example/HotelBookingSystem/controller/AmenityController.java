@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/amenities")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class AmenityController {
     @Autowired
     private AmenityRepository amenityRepository;

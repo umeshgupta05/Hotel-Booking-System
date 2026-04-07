@@ -25,7 +25,7 @@ public class Room {
     @ToString.Exclude
     private Hotel hotel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
     private RoomCategory roomCategory;
 

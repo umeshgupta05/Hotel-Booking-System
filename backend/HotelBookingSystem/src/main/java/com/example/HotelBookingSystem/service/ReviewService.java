@@ -9,9 +9,12 @@ import com.example.HotelBookingSystem.repository.ReviewRepository;
 import com.example.HotelBookingSystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
@@ -20,6 +23,7 @@ public class ReviewService {
     @Autowired
     private HotelRepository hotelRepository;
 
+    @Transactional
     public Review addReview(Long userId, ReviewRequest request) {
         User user = userRepository.findById(userId).orElseThrow();
         Hotel hotel = hotelRepository.findById(request.getHotelId()).orElseThrow();
